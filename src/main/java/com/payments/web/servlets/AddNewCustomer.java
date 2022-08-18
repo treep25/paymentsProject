@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
 
 import static com.payments.controller.ValidationForms.validateCustomer;
 
@@ -41,13 +42,14 @@ public class AddNewCustomer extends HttpServlet {
                 int id  = CustomerDAO.getInstance().getCustomerId(customer);
                 customer.setUserID(id);
                 CardDAO.getInstance().creatCardForCustomer(id);
+                UserRoleDAO.getInstance().SetCustomerRoleByID4Customer(customer.getUserID());
 
                 RequestDispatcher requestDispatcher = request.getRequestDispatcher("signUp.jsp");
                 requestDispatcher.forward(request,response);
             }
             RequestDispatcher requestDispatcher = request.getRequestDispatcher("logIn.jsp");
             requestDispatcher.forward(request,response);
-        }catch (IllegalArgumentException e){
+        }catch (SQLException e){
            throw new IllegalArgumentException();
         }
 

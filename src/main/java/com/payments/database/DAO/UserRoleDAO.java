@@ -2,10 +2,12 @@ package com.payments.database.DAO;
 
 import com.payments.database.ConnectionPool;
 import com.payments.entety.Customer;
+import com.payments.entety.UserRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static com.payments.database.SqlQuery.UserRole.INSERT_ROLE_USER;
@@ -14,12 +16,13 @@ public class UserRoleDAO {
 
     private static final Logger log = LoggerFactory.getLogger(CustomerDAO.class);
     private static UserRoleDAO instance;
+    private ConnectionPool connection = ConnectionPool.getInstance();
 
-    private UserRoleDAO (){
+    private UserRoleDAO () throws SQLException {
 
     }
 
-    public static synchronized UserRoleDAO getInstance(){
+    public static synchronized UserRoleDAO getInstance() throws SQLException {
         if(instance!= null) return instance;
         instance = new UserRoleDAO();
         return instance;
@@ -48,6 +51,21 @@ public class UserRoleDAO {
             log.error(e.getMessage());
             throw new RuntimeException(e);
         }
+    }
+    public String showUserRoleById(int id){
+        String userRole = null;
+        try(PreparedStatement preparedStatement =connection
+                .getConnection().prepareStatement("SELECT * FROM user_role WHERE user_id = ? ")){
+            preparedStatement.setInt(1,id);
+            preparedStatement.execute();
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                userRole = resultSet.getString(2);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return userRole;
     }
 
 }

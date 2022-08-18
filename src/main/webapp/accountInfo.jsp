@@ -49,6 +49,8 @@ ${sessionScope.log}
     <p class="fst-normal fs-4"><c:out value="${sessionScope.customer.getLogin()}"/></p>
     <p class="fw-bold fs-4">Phone number: </p>
     <p class="fst-normal fs-4"><c:out value="${sessionScope.customer.getPhone()}"/></p>
+    <p class="fw-bold fs-4">Role: </p>
+    <p class="fst-normal fs-4"><c:out value="${sessionScope.role}"/></p>
 
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
