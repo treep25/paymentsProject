@@ -21,9 +21,9 @@
                 <a class="nav-link active" aria-current="page" href="aboutUs.jsp">About Us</a>
             </li>
         </ul>
-        <ul class="nav nav-tabs gx-md-5">
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Account</a>
+        <ul class="nav nav-tabs gx-md-5 col-md-1 ">
+            <li class="nav-item dropdown ">
+                <a class="nav-link dropdown-toggle " data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Account</a>
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="accountInfo.jsp">Account info</a></li>
                     <li><a class="dropdown-item" href="cards.jsp">Cards</a></li>

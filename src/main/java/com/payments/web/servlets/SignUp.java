@@ -48,7 +48,6 @@ public class SignUp extends HttpServlet {
                 request.getSession().setAttribute("role",userRole);
 
 
-
                 RequestDispatcher requestDispatcher = request.getRequestDispatcher("personalCustomerAccount.jsp");
                 requestDispatcher.forward(request,response);
         }

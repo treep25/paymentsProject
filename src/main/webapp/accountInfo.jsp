@@ -41,7 +41,18 @@ ${sessionScope.log}
 
 <div class="container-fluid m-3 row gy-2">
     <p class="fst-normal fs-3   ">Personal account information</p>
-    <p class="fw-bold fs-4">First name:</p>
+
+    <div class="fs-2 row-cols-lg-3 ">
+        <ol class="list-group list-group-numbered  ">
+            <li class="list-group-item fs-4 " >First name: <c:out value="${sessionScope.customer.getFirstName()}"/> </li>
+            <li class="list-group-item fs-4">Last name: <c:out value="${sessionScope.customer.getSecondName()}"/></li>
+            <li class="list-group-item fs-4">Login: <c:out value="${sessionScope.customer.getLogin()}"/></li>
+            <li class="list-group-item fs-4">Phone: <c:out value="${sessionScope.customer.getPhone()}"/></li>
+            <li class="list-group-item fs-4">Role: <c:out value="${sessionScope.role}"/></li>
+        </ol>
+    </div>
+
+    <p class="fw-bold fs-4">First name: </p>
     <p class="fst-normal fs-4"><c:out value="${sessionScope.customer.getFirstName()}"/></p>
     <p class="fw-bold fs-4">Last name: </p>
     <p class="fst-normal fs-4"><c:out value="${sessionScope.customer.getSecondName()}"/></p>

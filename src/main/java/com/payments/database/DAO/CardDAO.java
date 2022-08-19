@@ -125,7 +125,8 @@ public class CardDAO {
         return cardId;
     }
 
-    public void transferP2P(int cardId1, int cardId2, int value) throws SQLException {
+    public boolean transferP2P(int cardId1, int cardId2, int value) throws SQLException {
+        boolean isTrue = false;
 
         try (PreparedStatement preparedStatement = ConnectionPool.getInstance().getConnection()
                 .prepareStatement("UPDATE card SET balance = balance - ? WHERE card_id =?")) {
@@ -142,14 +143,17 @@ public class CardDAO {
                 preparedStatement1.setInt(1, value);
                 preparedStatement1.setInt(2, cardId2);
                 preparedStatement1.executeUpdate();
+                isTrue = true;
 
             } catch (SQLException e) {
                 log.error(e.getMessage());
                 throw new RuntimeException();
+
             }
             ConnectionPool.getInstance().getConnection().commit();
 
         } catch (SQLException e) {
+            isTrue = false;
             try {
                 ConnectionPool.getInstance().getConnection().rollback();
 
@@ -158,6 +162,7 @@ public class CardDAO {
                 throw new RuntimeException();
             }
         }
+        return isTrue;
 
     }
 }

@@ -19,7 +19,6 @@ public class Replenishment extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletContext servletContext = getServletContext();
         int balance = Integer.parseInt(request.getParameter("cardValue"));
-        System.out.println(balance);
         if(balance >0){
             Card card = new Card();
             card = (Card) request.getSession().getAttribute("card");

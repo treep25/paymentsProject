@@ -10,11 +10,9 @@ import java.util.Date;
 
 public class Main {
     public static void main(String[] args) {
-        try {
-            PaymentDAO.getInstance().setPaymentStatus(152);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+
+        System.out.println(CardDAO.getInstance().getCardIdByUserId(77));
+
 
     }
 }

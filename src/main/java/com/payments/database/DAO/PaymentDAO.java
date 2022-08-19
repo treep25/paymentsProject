@@ -42,8 +42,13 @@ public class PaymentDAO {
             preparedStatement.execute();
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
-                paymentList.add(new Payment(resultSet.getInt(2)
-                        ,resultSet.getTimestamp(3),resultSet.getString(4)));
+                paymentList.add(new Payment(resultSet.getInt(1)
+                        ,resultSet.getInt(2)
+                        ,resultSet.getString(3)
+                        ,resultSet.getString(4)
+                        ,resultSet.getInt(5)
+                        ,resultSet.getTimestamp(6)
+                        ,resultSet.getString(7)));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -51,31 +56,41 @@ public class PaymentDAO {
         return paymentList;
     }
 
-    public void addPayment(Payment payment ){
-        date = payment.getDate();
+    public boolean addPayment(Payment payment ){
+        boolean t = false;
         try(PreparedStatement preparedStatement = connection
-                .getConnection().prepareStatement("INSERT INTO payment (user_id,date,payment_status) VALUES (?,?,?)")){
+                .getConnection().prepareStatement("INSERT INTO payment VALUES (DEFAULT,?,?,?,?,?,?)")){
 
-            preparedStatement.setInt(1,payment.getUserId());
-            preparedStatement.setTimestamp(2, payment.getDate());
-            preparedStatement.setString(3,payment.getPaymentStatus());
-            preparedStatement.execute();
+           preparedStatement.setInt(1,payment.getUserId());
+           preparedStatement.setString(2,payment.getEmailSender());
+           preparedStatement.setString(3,payment.getEmailRecipient());
+           preparedStatement.setInt(4,payment.getAmount());
+           preparedStatement.setTimestamp(5,payment.getDate());
+           preparedStatement.setString(6,payment.getPaymentStatus());
+           preparedStatement.execute();
+           t = true;
         } catch (SQLException e) {
             log.error(e.getMessage());
             throw new RuntimeException(e);
         }
+        return t;
 
     }
+    // smth wrong
     public int getPaymentIdByPayment(Payment payment){
         int paymentId = 0;
-
+        date = payment.getDate();
         try(PreparedStatement preparedStatement = connection
                 .getConnection().prepareStatement("SELECT * FROM payment");
             ResultSet resultSet = preparedStatement.executeQuery()){
             while (resultSet.next()) {
-                if (payment.getUserId() == resultSet.getInt(2)
-                        && payment.getDate() == date
-                        && Objects.equals(payment.getPaymentStatus(), resultSet.getString(4))) {
+                if (Objects.equals(payment.getUserId(),resultSet.getInt(2))
+                        && Objects.equals(payment.getDate() ,date)
+                        && Objects.equals(payment.getPaymentStatus(), resultSet.getString(7))
+                        && Objects.equals(payment.getAmount(),resultSet.getInt(5))
+                        && Objects.equals(payment.getEmailSender(),resultSet.getString(3))
+                        &&Objects.equals(payment.getEmailRecipient(),resultSet.getString(4))){
+
                     paymentId = resultSet.getInt(1);
                 }
             }
@@ -87,16 +102,4 @@ public class PaymentDAO {
     }
 
 
-    public void setPaymentStatus(int paymentId){
-        try(PreparedStatement preparedStatement = connection
-                .getConnection().prepareStatement("UPDATE payment SET payment_status = ? WHERE payment_id = ?")){
-
-            preparedStatement.setString(1,"Send");
-            preparedStatement.setInt(2,paymentId);
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            log.error(e.getMessage());
-            throw new RuntimeException(e);
-        }
-    }
 }

@@ -6,8 +6,7 @@
 </head>
 <body>
     <c:forEach var="list" items="${sessionScope.paymentList}">
-        <p class="fw-bold fs-4">Date: <c:out value="${list.getDate()}"/> </p>
-        <p class="fw-bold fs-4">Status: <c:out value="${list.getPaymentStatus()}"/> </p>
+        <p class="fw-bold fs-4"><c:out value="${list.toString()}"/> </p>
 
 
     </c:forEach>
