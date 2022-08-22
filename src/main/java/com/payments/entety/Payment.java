@@ -9,11 +9,11 @@ public class Payment {
     private String emailSender;
     private String emailRecipient;
     private Integer amount;
-    private Timestamp date;
+    private String date;
     private String paymentStatus;
 
 
-    public Payment(int userId, String emailSender, String emailRecipient, Integer amount, Timestamp date, String paymentStatus) {
+    public Payment(int userId, String emailSender, String emailRecipient, Integer amount, String date, String paymentStatus) {
         this.userId = userId;
         this.emailSender = emailSender;
         this.emailRecipient = emailRecipient;
@@ -23,7 +23,7 @@ public class Payment {
     }
 
     public Payment(int paymentId, int userId, String emailSender,
-                   String emailRecipient, Integer amount, Timestamp date, String paymentStatus) {
+                   String emailRecipient, Integer amount, String date, String paymentStatus) {
         this.paymentId = paymentId;
         this.userId = userId;
         this.emailSender = emailSender;
@@ -72,7 +72,7 @@ public class Payment {
         return userId;
     }
 
-    public Timestamp getDate() {
+    public String getDate() {
         return date;
     }
 
@@ -88,7 +88,7 @@ public class Payment {
         this.userId = userId;
     }
 
-    public void setDate(Timestamp date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
@@ -96,7 +96,7 @@ public class Payment {
     public String toString() {
         return  "Sender: " + emailSender +
                 " Recipient: " + emailRecipient +
-                " Amount: " + amount +
+                " Amount: " + amount +"$"+
                 " date: " + date +
                 " Status: " + paymentStatus;
     }

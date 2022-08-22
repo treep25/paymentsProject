@@ -13,8 +13,10 @@ public class LogOut extends HttpServlet {
         request.getSession().removeAttribute("card");
         request.getSession().removeAttribute("customerId");
         request.getSession().removeAttribute("customer");
-        request.getRequestDispatcher("mainPage.jsp").forward(request,response);
+        request.getSession().removeAttribute("limit");
 
+
+        response.sendRedirect("http://localhost:8080/mainPage.jsp");
     }
 
     @Override

@@ -25,7 +25,7 @@
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="accountInfo.jsp">Account info</a></li>
                     <li><a class="dropdown-item" href="cards.jsp">Cards</a></li>
-                    <li><a class="dropdown-item" href="#">Payments</a></li>
+                    <li><a class="dropdown-item" href="Payments" methods="doPost">Payments</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item" href="LogOut" methods="doPost">Log out</a></li>
                 </ul>
@@ -37,7 +37,7 @@
 <div class="form" >
     <form name="form" action="Replenishment" method="post" >
         <label>
-            <input type="number" class="input" name="cardValue" placeholder="$0.0">
+            <input type="number" class="input" name="amount" placeholder="$0.0" min="1">
         </label>
             <button class="btn btn-primary d-grid gap-2 mt-3" type="submit">Submit</button>
     </form>

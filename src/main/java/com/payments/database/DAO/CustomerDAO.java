@@ -125,6 +125,21 @@ public class CustomerDAO {
         }
         return answer;
     }
+    public boolean searchingByPhone(String phone){
+        boolean count = false;
+        try(PreparedStatement preparedStatement = ConnectionPool.getInstance()
+                .getConnection().prepareStatement(SELECT_CUSTOMER_PHONE);
+            ResultSet resultSet = preparedStatement.executeQuery()){
+            while(resultSet.next()){
+                if(resultSet.getString(1).equals(phone)){
+                    count = true;
+                }
+            }
+        } catch (SQLException e) {
+            log.error(e.getMessage());
+        }
+        return  count;
+    }
     public boolean searchingByLogin(String login){
         boolean count = false;
         try(PreparedStatement preparedStatement =

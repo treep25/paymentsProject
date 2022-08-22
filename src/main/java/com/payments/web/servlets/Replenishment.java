@@ -12,28 +12,24 @@ import java.io.IOException;
 public class Replenishment extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        doPost(request,response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ServletContext servletContext = getServletContext();
-        int balance = Integer.parseInt(request.getParameter("cardValue"));
-        if(balance >0){
-            Card card = new Card();
-            card = (Card) request.getSession().getAttribute("card");
-
-            CardDAO.getInstance().updateBalanceByCardId(card.getCardId(),balance);
-            card = CardDAO.getInstance().getCardById((Integer) request.getSession().getAttribute("customerId"));
-
+        Card card = (Card) request.getSession().getAttribute("card");
+        int balance = card.getBalance();
+        int amount = Integer.parseInt(request.getParameter("amount"));
+        if (amount > 0) {
+            if(CardDAO.getInstance().updateBalanceByCardId(card.getCardId(),amount)){
+                card.setBalance(balance + amount);
+            }
             request.getSession().setAttribute("card",card);
-
-
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("cards.jsp");
-            requestDispatcher.forward(request,response);
-
+            response.sendRedirect("http://localhost:8080/cards.jsp");
+        }else{
+            request.getRequestDispatcher("replenishment.jsp").forward(request,response);
         }
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("replenishment.jsp");
-        requestDispatcher.forward(request,response);
+
     }
+    //если да то на cards.jsp если нет то на replenishment.jsp
 }

@@ -15,6 +15,7 @@ public class CardDAO {
 
     private static final Logger log = LoggerFactory.getLogger(CardDAO.class);
     private static CardDAO instance;
+    private ConnectionPool connection;
 
     private CardDAO() {
 
@@ -73,17 +74,17 @@ public class CardDAO {
         return balance;
     }
 
-    public void updateBalanceByCardId(int carId, int balance) {
+    public boolean updateBalanceByCardId(int cardId, int amount) {
         try (PreparedStatement preparedStatement = ConnectionPool.getInstance()
                 .getConnection().prepareStatement("UPDATE card SET balance = balance + ? WHERE card_id =?")) {
-            preparedStatement.setInt(1, balance);
-            preparedStatement.setInt(2, carId);
+            preparedStatement.setInt(1, amount);
+            preparedStatement.setInt(2, cardId);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             log.error(e.getMessage());
             throw new RuntimeException(e);
         }
-
+        return true;
     }
 
     public Card getCardById(int id) {
@@ -117,7 +118,6 @@ public class CardDAO {
                 }
 
             }
-
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -126,43 +126,41 @@ public class CardDAO {
     }
 
     public boolean transferP2P(int cardId1, int cardId2, int value) throws SQLException {
-        boolean isTrue = false;
 
-        try (PreparedStatement preparedStatement = ConnectionPool.getInstance().getConnection()
+        boolean isCorrect = false;
+        Connection con = ConnectionPool.getInstance().getConnection();
+        con.setAutoCommit(false);
+        try (PreparedStatement preparedStatement = con
                 .prepareStatement("UPDATE card SET balance = balance - ? WHERE card_id =?")) {
 
-            ConnectionPool.getInstance().getConnection().setAutoCommit(false);
 
             preparedStatement.setInt(1, value);
             preparedStatement.setInt(2, cardId1);
             preparedStatement.executeUpdate();
 
-            try (PreparedStatement preparedStatement1 = ConnectionPool.getInstance().getConnection()
+            try (PreparedStatement preparedStatement1 = con
                     .prepareStatement("UPDATE card SET balance = balance + ? WHERE card_id =?")) {
 
                 preparedStatement1.setInt(1, value);
                 preparedStatement1.setInt(2, cardId2);
                 preparedStatement1.executeUpdate();
-                isTrue = true;
+                con.commit();
+
 
             } catch (SQLException e) {
+                isCorrect = false;
+                con.rollback();
                 log.error(e.getMessage());
-                throw new RuntimeException();
 
             }
-            ConnectionPool.getInstance().getConnection().commit();
+            isCorrect = true;
 
         } catch (SQLException e) {
-            isTrue = false;
-            try {
-                ConnectionPool.getInstance().getConnection().rollback();
-
-            } catch (SQLException e1) {
-                log.error(e1.getMessage());
-                throw new RuntimeException();
-            }
+            isCorrect = false;
+            con.rollback();
+            log.error(e.getMessage());
         }
-        return isTrue;
-
+        con.setAutoCommit(true);
+        return isCorrect;
     }
 }

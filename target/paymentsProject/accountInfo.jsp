@@ -41,16 +41,18 @@ ${sessionScope.log}
 
 <div class="container-fluid m-3 row gy-2">
     <p class="fst-normal fs-3   ">Personal account information</p>
-    <p class="fw-bold fs-4">First name:</p>
-    <p class="fst-normal fs-4"><c:out value="${sessionScope.customer.getFirstName()}"/></p>
-    <p class="fw-bold fs-4">Last name: </p>
-    <p class="fst-normal fs-4"><c:out value="${sessionScope.customer.getSecondName()}"/></p>
-    <p class="fw-bold fs-4">Login: </p>
-    <p class="fst-normal fs-4"><c:out value="${sessionScope.customer.getLogin()}"/></p>
-    <p class="fw-bold fs-4">Phone number: </p>
-    <p class="fst-normal fs-4"><c:out value="${sessionScope.customer.getPhone()}"/></p>
-    <p class="fw-bold fs-4">Role: </p>
-    <p class="fst-normal fs-4"><c:out value="${sessionScope.role}"/></p>
+
+    <div class="fs-2 row-cols-lg-3 ">
+        <ol class="list-group list-group-numbered  ">
+            <li class="list-group-item fs-4 " >First name: <c:out value="${sessionScope.customer.getFirstName()}"/> </li>
+            <li class="list-group-item fs-4">Last name: <c:out value="${sessionScope.customer.getSecondName()}"/></li>
+            <li class="list-group-item fs-4">Login: <c:out value="${sessionScope.customer.getLogin()}"/></li>
+            <li class="list-group-item fs-4">Phone: <c:out value="${sessionScope.customer.getPhone()}"/></li>
+            <li class="list-group-item fs-4">Role: <c:out value="${sessionScope.role}"/></li>
+        </ol>
+    </div>
+
+
 
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>

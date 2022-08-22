@@ -36,6 +36,8 @@
         <button class="btn" type="submit">
             Submit
         </button>
+        <p class="er">${sessionScope.error}</p>
+        <p class="er">${sessionScope.validationError}</p>
         <div class="container signin">
             <p><a href="signUp.jsp">Already have an account?</a></p>
         </div>

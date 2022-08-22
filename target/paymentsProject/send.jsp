@@ -3,6 +3,7 @@
 <html>
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <link type="text/css" rel="stylesheet" href="css/er.css">
     <title>Send</title>
 </head>
 <body>
@@ -26,7 +27,7 @@
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="accountInfo.jsp">Account info</a></li>
                     <li><a class="dropdown-item" href="cards.jsp">Cards</a></li>
-                    <li><a class="dropdown-item" href="#">Payments</a></li>
+                    <li><a class="dropdown-item" href="" methods="doPost">Payments</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item" href="LogOut" methods="doPost">Log out</a></li>
                 </ul>
@@ -36,15 +37,20 @@
 </nav>
 <div class="d-grid gap-2 col-2 mx-auto m-4">
     <div class="container-fluid m-3 row gy-2">
-        <p class="fst-normal fs-3   ">Card balance</p>
+        <p class="fst-normal fs-3 ">Card balance</p>
         <p class="fst-normal fs-4"><c:out value="${sessionScope.card.getBalance()}"/> $</p>
     </div>
     <div class="form" >
-        <form name="form" action="SendTransfer" method="post" >
-            <label>
-                <input type="email" class="input" name="emailToSend" placeholder="smth@gmail.com">
-                <input type="number" class="input" name="cardValue" placeholder="$0.0">
-            </label>
+        <form action="SendTransfer" method="post" >
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Recipient email</label>
+                <input type="email" class="form-control" id="exampleInputEmail1" name="recipient" aria-describedby="emailHelp">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Amount </label>
+                <input type="number" class="form-control" name="amount" id="exampleInputPassword1" min="1">
+            </div>
+            <p class="er"><c:out value="${sessionScope.warning}"/></p>
             <button class="btn btn-primary d-grid gap-2 mt-3" type="submit">Submit</button>
         </form>
     </div>
