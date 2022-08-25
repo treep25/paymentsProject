@@ -1,5 +1,6 @@
 package com.payments.web.servlets;
 
+import com.payments.controller.PasswordEncryption;
 import com.payments.database.DAO.CardDAO;
 import com.payments.database.DAO.CustomerDAO;
 import com.payments.database.DAO.UserRoleDAO;
@@ -33,34 +34,36 @@ public class SignUp extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String login = request.getParameter("email");
         String password = request.getParameter("password");
-
-        request.getSession().removeAttribute("error");
         request.getSession().removeAttribute("validationError");
         request.getSession().removeAttribute("error1");
 
-        if (CustomerDAO.getInstance().searchingByLoginAndPassword(login, password)) {
-            try {
-                Customer customer = CustomerDAO.getInstance().getCustomerByLogin(login);
-                customer.setPassword(null);
-                String userRole = UserRoleDAO.getInstance().showUserRoleById(customer.getUserID());
+        try {
+            if (CustomerDAO.getInstance().searchingByLoginAndPassword(login
+                    ,PasswordEncryption.encryptPasswordSha1(password))) {
 
-                Card card = CardDAO.getInstance().getCardById(customer.getUserID());
+                try {
+                    Customer customer = CustomerDAO.getInstance().getCustomerByLogin(login);
+                    customer.setPassword(null);
+                    String userRole = UserRoleDAO.getInstance().showUserRoleById(customer.getUserID());
+
+                    Card card = CardDAO.getInstance().getCardById(customer.getUserID());
 
 
-                request.getSession().setAttribute("customerId", customer.getUserID());
-                request.getSession().setAttribute("customer", customer);
-                request.getSession().setAttribute("card", card);
-                request.getSession().setAttribute("role", userRole);
-                request.getSession().setAttribute("countRegular", 1);
-                request.getSession().setAttribute("countByDate", 2);
+                    request.getSession().setAttribute("customerId", customer.getUserID());
+                    request.getSession().setAttribute("customer", customer);
+                    request.getSession().setAttribute("card", card);
+                    request.getSession().setAttribute("role", userRole);
 
-                response.sendRedirect("http://localhost:8080/personalCustomerAccount.jsp");
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
+                    response.sendRedirect("http://localhost:8080/personalCustomerAccount.jsp");
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            } else {
+                request.getSession().setAttribute("error1","Login or password is incorrect");
+                request.getRequestDispatcher("signUp.jsp").forward(request, response);
             }
-        } else {
-            request.getSession().setAttribute("error1","Login or password is incorrect");
-            request.getRequestDispatcher("signUp.jsp").forward(request, response);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
 
 

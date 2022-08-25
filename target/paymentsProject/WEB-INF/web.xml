@@ -16,10 +16,35 @@
         <url-pattern>/personalCustomerAccount.jsp</url-pattern>
         <url-pattern>/replenishment.jsp</url-pattern>
         <url-pattern>/send.jsp</url-pattern>
+        <url-pattern>/customers.jsp</url-pattern>
+        <url-pattern>/payments.jsp</url-pattern>
         <url-pattern>/SendTransfer</url-pattern>
         <url-pattern>/Replenishment</url-pattern>
         <url-pattern>/LogOut</url-pattern>
-        <url-pattern>/Payments</url-pattern>
+        <url-pattern>/Pagination</url-pattern>
+        <url-pattern>/PaginationAllCustomers</url-pattern>
+        <url-pattern>/ReplenishmentToCustomer</url-pattern>
+        <url-pattern>/StatusOfCard</url-pattern>
+        <url-pattern>/MakeRequest</url-pattern>
+    </filter-mapping>
+
+
+    <filter>
+        <filter-name>AccessWhenAdmin</filter-name>
+        <filter-class>com.payments.web.filters.AccessWhenAdmin</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AccessWhenAdmin</filter-name>
+        <url-pattern>/PaginationAllCustomers</url-pattern>
+        <url-pattern>/ReplenishmentToCustomer</url-pattern>
+        <url-pattern>/StatusOfCard</url-pattern>
+        <url-pattern>/DeleteCustomers</url-pattern>
+        <url-pattern>/Request</url-pattern>
+        <url-pattern>/StatusOfCard</url-pattern>
+        <url-pattern>/customers.jsp</url-pattern>
+        <url-pattern>/removeCustomer.jsp</url-pattern>
+        <url-pattern>/request.jsp</url-pattern>
+        <url-pattern>/topUp.jsp</url-pattern>
     </filter-mapping>
 
 </web-app>

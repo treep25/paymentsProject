@@ -8,6 +8,10 @@ public class Customer {
     private String login;
     private String password;
     private String phone;
+    private String role ;
+
+    private Integer balance;
+    private String statusOfCard;
 
 
     public Customer() {
@@ -29,12 +33,38 @@ public class Customer {
                     String secondName,
                     String login,
                     String password, String phone) {
-        this.userID = userID;
         this.firstName = firstName;
         this.secondName = secondName;
         this.login = login;
         this.password = password;
         this.phone = phone;
+    }
+
+    public String getStatusOfCard() {
+        return statusOfCard;
+    }
+
+    public Customer setStatusOfCard(String statusOfCard) {
+        this.statusOfCard = statusOfCard;
+        return this;
+    }
+
+    public Integer getBalance() {
+        return balance;
+    }
+
+    public Customer setBalance(Integer balance) {
+        this.balance = balance;
+        return this;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public Customer setRole(String role) {
+        this.role = role;
+        return this;
     }
 
     public int getUserID() {
@@ -92,15 +122,5 @@ public class Customer {
         return this;
     }
 
-    @Override
-    public String toString() {
-        return "Customer{" +
-                "userID=" + userID +
-                ", firstName='" + firstName + '\'' +
-                ", secondName='" + secondName + '\'' +
-                ", login='" + login + '\'' +
-                ", password='" + password + '\'' +
-                ", phone='" + phone + '\'' +
-                '}';
-    }
+
 }

@@ -17,9 +17,7 @@ import java.util.stream.Collectors;
 
 @WebServlet(name = "Pagination", value = "/Pagination")
 public class Pagination extends HttpServlet {
-    private Integer inverse (int number){
-        return -number;
-    }
+
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -48,7 +46,6 @@ public class Pagination extends HttpServlet {
         if (nOfPages % recordsPerPage > 0) nOfPages++;
 
         request.getSession().setAttribute("sorting", sorting);
-        sorting = inverse(sorting);
         request.getSession().setAttribute("noOfPages", nOfPages);
         request.getSession().setAttribute("currentPage", currentPage);
         request.getSession().setAttribute("recordsPerPage", recordsPerPage);

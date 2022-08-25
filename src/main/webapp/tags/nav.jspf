@@ -1,0 +1,73 @@
+<%@ page import="com.payments.entety.Card" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<% Card card = (Card) request.getSession().getAttribute("card");%>
+<link type="text/css" rel="stylesheet" href="css/er.css">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand disabled " tabindex="-1" aria-disabled="true"  >Payments <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="24" height="24" fill="currentColor" >
+                <path d="M512 32C547.3 32 576 60.65 576 96V128H0V96C0 60.65 28.65 32 64 32H512zM576 416C576 451.3 547.3 480 512 480H64C28.65 480 0 451.3 0 416V224H576V416zM112 352C103.2 352 96 359.2 96 368C96 376.8 103.2 384 112 384H176C184.8 384 192 376.8 192 368C192 359.2 184.8 352 176 352H112zM240 384H368C376.8 384 384 376.8 384 368C384 359.2 376.8 352 368 352H240C231.2 352 224 359.2 224 368C224 376.8 231.2 384 240 384z"></path>
+            </svg></a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent1">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="personalCustomerAccount.jsp">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="aboutUs.jsp">About</a></li>
+                </ul>
+                <%if(!card.getStatus().equals("Active")){%>
+                <a class="btn btn-primary m-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Request</a>
+                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="staticBackdropLabel">Making request</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                You can make just one request
+                                <p class="er"><c:out value="${sessionScope.warning}"/></p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <a class="btn btn-primary" href="MakeRequest">Request</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <%}%>
+                <%if (request.getSession().getAttribute("role").equals("Admin") ){ %>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton33" data-bs-toggle="dropdown" aria-expanded="false">
+                        Admin tools
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+                        <li><a class="dropdown-item " href="PaginationAllCustomers?records=5&page=1&sorting=1">Customers inf</a></li>
+                        <li><a class="dropdown-item " href="topUp.jsp">Top up account</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item " href="Requests">Requests</a></li>
+                        <li><a class="dropdown-item " href="removeCustomer.jsp">Remove customer</a></li>
+                    </ul>
+                </div>
+                <%}%>
+                <div class="dropdown m-2">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false">
+                        Account
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+                        <li><a class="dropdown-item" href="accountInfo.jsp">Account info</a></li>
+                        <%if (!card.getStatus().equals("Active")) {%>
+                        <li><a class="dropdown-item disabled" href="#" tabindex="-1" aria-disabled="true">Cards</a></li>
+                        <li><a class="dropdown-item disabled" href="#" tabindex="-1" aria-disabled="true">Payments</a></li>
+                        <%} else {%>
+                        <li><a class="dropdown-item" href="cards.jsp">Cards</a></li>
+                        <li><a class="dropdown-item" href="Pagination?page=1&records=5&sorting=1">Payments</a></li>
+                        <%}%>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="LogOut">Log out</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>

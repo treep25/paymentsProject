@@ -2,45 +2,55 @@
 <html>
 <head>
     <link type="text/css" rel="stylesheet" href="css/form-style.css">
-    <link type="text/css" rel="stylesheet" href="css/fonts.css">
+    <%@ include file="/tags/bootstrap.jspf" %>
+    <link rel="shortcut icon" href="#">
     <title>Registration</title>
 </head>
 <body>
-
 <div class="page">
     <form class="form" name="formReg" action="AddNewCustomer" method="post" novalidate>
-        <h1 class="w">Sign Up</h1>
-        <div class="form_group">
-            <input type="text" class="input name-input field" name="name" placeholder="Name">
+        <div class="form_group m-2 nav justify-content-center">
+            <p class="display-6">Sign Up</p>
         </div>
         <div class="form_group">
-            <input type="text" class="input secName-input field" name="secName" placeholder="Second name">
+            <input type="text" class="input name-input form-control field" name="name" placeholder="Name">
         </div>
         <div class="form_group">
-            <input type="email" class="input email-input field" name="email" placeholder="Email">
+            <input type="text" class="input secName-input form-control field" name="secName" placeholder="Second name">
         </div>
         <div class="form_group">
-            <input type="tel" class="input phone-input field" name="phone" placeholder="Phone">
+            <input type="text" class="input email-input form-control field" name="email" placeholder="Email">
         </div>
         <div class="form_group">
-            <input type="password" class="input password-input field" name="password" placeholder="Password">
+            <input type="text" class="input phone-input form-control field" name="phone" placeholder="Phone">
         </div>
         <div class="form_group">
-            <input type="password" class="input passwordRepeat-input field" name="passwordRepeat"
+            <input type="password" class="input password-input form-control field" name="password" placeholder="Password">
+        </div>
+        <div class="form_group">
+            <input type="password" class="input passwordRepeat-input field   form-control" name="passwordRepeat"
                    placeholder="Password">
         </div>
         <div class="form_group">
-            <input type="checkbox" class="checkbox" id="privacy_check">
-            <label class="checkbox_label" for="privacy_check">Accept privacy policy</label>
+            <div class="form-check">
+                <small>
+                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                    <label class="form-check-label" for="flexCheckDefault">
+                        Accept privacy police
+                    </label>
+                </small>
+            </div>
         </div>
-        <button class="btn" type="submit">
-            Submit
+        <button class="btn btn btn-primary " type="submit">
+            Sign up
         </button>
-        <p class="er">${sessionScope.error}</p>
-        <p class="er">${sessionScope.validationError}</p>
-        <div class="container signin">
-            <p><a href="signUp.jsp">Already have an account?</a></p>
-        </div>
+        <small>
+            <div class="m-1" >
+                <p class="er">${sessionScope.error}</p>
+                <p class="er">${sessionScope.validationError}</p>
+                <a href="signUp.jsp" class="card-link text-decoration-none size">Already have an account?</a>
+            </div>
+        </small>
     </form>
 </div>
 <script src='js/validation/validReg.js'></script>

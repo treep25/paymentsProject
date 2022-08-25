@@ -3,13 +3,14 @@ let email = form.querySelector('.email-input')
 let name = form.querySelector('.name-input')
 let secName = form.querySelector('.secName-input')
 let phone = form.querySelector('.phone-input')
-let password = form.querySelector('.password-input')
+let password = form.querySelector('input.input.password-input.form-control.field')
 let repeatPassword = form.querySelector('.passwordRepeat-input')
-let checkbox = form.querySelector('.checkbox')
+let checkbox = form.querySelector('.form-check-input')
 let fields = form.querySelectorAll('.field')
 
+
 function validateEmail(mail) {
-    let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(mail).toLowerCase());
 }
 function validatePhone(phoneNum){
@@ -44,6 +45,7 @@ form.onsubmit = function () {
     });
     if (emptyInputs.length !== 0) {
         console.log('inputs not filled');
+        fields.item(1).value
         return false;
     }
     if(!validateNameOrSecName(nameValue)){

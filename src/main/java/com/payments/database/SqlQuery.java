@@ -10,6 +10,18 @@ public abstract class SqlQuery {
         public static final String SELECT_CUSTOMER_LOGIN = "SELECT login FROM customer";
         public static final String SELECT_CUSTOMER_PHONE = "SELECT phone FROM customer";
         public static final String SELECT_CUSTOMER_LOGIN_Id = "SELECT login, user_id FROM customer";
+        public static final String PAGINATION_ALL_CUSTOMERS_BY_ID_EARLIER = "SELECT (user_id) FROM customer ORDER BY user_id LIMIT ?, ?";
+        public static final String PAGINATION_ALL_CUSTOMERS_BY_ID_LATEST = "SELECT (user_id) FROM customer ORDER BY  user_id DESC LIMIT ?, ?";
+        public static final String PAGINATION_ALL_CUSTOMERS_BY_NAME_EARLIER = "SELECT (user_id) FROM customer ORDER BY first_name LIMIT ?, ?";
+        public static final String PAGINATION_ALL_CUSTOMERS_BY_NAME_LATEST = "SELECT (user_id) FROM customer ORDER BY first_name DESC LIMIT ?, ?";
+        public static final String PAGINATION_ALL_CUSTOMERS_BY_AMOUNT_EARLIER = "SELECT (user_id) FROM card ORDER BY balance LIMIT ?, ?";
+        public static final String PAGINATION_ALL_CUSTOMERS_BY_AMOUNT_LATEST = "SELECT (user_id) FROM card ORDER BY balance DESC LIMIT ?, ?";
+        public static final String PAGINATION_ALL_CUSTOMERS_BY_3_TABLES = "SELECT * FROM customer,user_role,card WHERE customer.user_id = ? AND user_role.user_id=? AND card.user_id=?";
+        public static final String ALL_CUSTOMERS_WHERE_STATUS_PREPARE = "SELECT * FROM card WHERE status='Prepare'";
+        public static final String IS_EXIST_BY_ID = "SELECT * FROM customer WHERE user_id=?";
+        public static final String REMOVE_CUSTOMER = "DELETE FROM customer WHERE user_id = ?";
+        public static final String SET_PASSWORD = "UPDATE customer SET password = ? WHERE login = ?";
+
 
     }
     public static class Card {

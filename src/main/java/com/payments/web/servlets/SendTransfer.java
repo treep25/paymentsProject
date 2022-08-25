@@ -44,8 +44,12 @@ public class SendTransfer extends HttpServlet {
         int amount = Integer.parseInt(request.getParameter("amount"));
         Card card = (Card) request.getSession().getAttribute("card");
         Customer customer = (Customer) request.getSession().getAttribute("customer");
-        customerDAO = CustomerDAO.getInstance();
-        cardDAO = CardDAO.getInstance();
+        try {
+            customerDAO = CustomerDAO.getInstance();
+            cardDAO = CardDAO.getInstance();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
         if(!recipientEmail.isEmpty() && customerDAO.searchingByLogin(recipientEmail) && amount>0
                 && card.getBalance()>amount){

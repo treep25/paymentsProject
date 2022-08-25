@@ -35,8 +35,8 @@ public class PaymentDAO {
     }
     private String getSQL(int sorting){
         if(Objects.equals(sorting,1))return PAGINATION_ALL_PAYMENTS_EARLIER;
-        else if (Objects.equals(sorting,-1)) return PAGINATION_ALL_PAYMENTS_LATEST ;
-        else if (Objects.equals(sorting,2)) return PAGINATION_ALL_PAYMENTS_BY_DATE_EARLIER;
+        else if (Objects.equals(sorting,2)) return PAGINATION_ALL_PAYMENTS_LATEST ;
+        else if (Objects.equals(sorting,3)) return PAGINATION_ALL_PAYMENTS_BY_DATE_EARLIER;
         else return PAGINATION_ALL_PAYMENTS_BY_DATE_LATEST;
     }
 

@@ -5,6 +5,7 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 @WebServlet(name = "LogOut", value = "/LogOut")
 public class LogOut extends HttpServlet {
@@ -13,8 +14,10 @@ public class LogOut extends HttpServlet {
         request.getSession().removeAttribute("card");
         request.getSession().removeAttribute("customerId");
         request.getSession().removeAttribute("customer");
-        request.getSession().removeAttribute("limit");
-
+        request.getSession().removeAttribute("warning");
+        request.getSession().removeAttribute("listOfCustomers");
+        request.getSession().removeAttribute("paymentList");
+        request.getSession().removeAttribute("requestList");
 
         response.sendRedirect("http://localhost:8080/mainPage.jsp");
     }

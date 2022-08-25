@@ -1,5 +1,6 @@
 package com.payments.web.servlets;
 
+import com.payments.controller.PasswordEncryption;
 import com.payments.controller.ValidationForms;
 import com.payments.database.DAO.CardDAO;
 import com.payments.database.DAO.CustomerDAO;
@@ -37,7 +38,12 @@ public class AddNewCustomer extends HttpServlet {
         request.getSession().removeAttribute("validationError");
         request.getSession().removeAttribute("error1");
 
-        CustomerDAO customerDAO = CustomerDAO.getInstance();
+        CustomerDAO customerDAO = null;
+        try {
+            customerDAO = CustomerDAO.getInstance();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
         Customer customer = new Customer(request.getParameter("name"),
                 request.getParameter("secName"),
@@ -48,14 +54,17 @@ public class AddNewCustomer extends HttpServlet {
         String passwordRep = request.getParameter("passwordRepeat");
         if (!customerDAO.searchingByLogin(customer.getLogin())
                 || !customerDAO.searchingByPhone(customer.getPhone())) {
-
             if (validateCustomer(customer, passwordRep)) {
                 try {
+                    customer.setPassword(PasswordEncryption.encryptPasswordSha1(customer.getPassword()));
+
                     CustomerDAO.getInstance().addCustomer(customer);
                     int id = CustomerDAO.getInstance().getCustomerId(customer);
+
                     customer.setUserID(id);
                     CardDAO.getInstance().creatCardForCustomer(id);
                     UserRoleDAO.getInstance().SetCustomerRoleByID4Customer(customer.getUserID());
+
                     response.sendRedirect("http://localhost:8080/signUp.jsp");
 
                 } catch (SQLException e) {

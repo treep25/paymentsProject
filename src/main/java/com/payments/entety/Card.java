@@ -5,6 +5,7 @@ public class Card {
     private int cardId;
     private int userId;
     private int balance = 0;
+    private String status ;
 
     public Card() {
     }
@@ -15,6 +16,14 @@ public class Card {
         this.balance = balance;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public Card setStatus(String status) {
+        this.status = status;
+        return this;
+    }
 
     public int getCardId() {
         return cardId;

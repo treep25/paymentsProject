@@ -15,18 +15,34 @@ public class CardDAO {
 
     private static final Logger log = LoggerFactory.getLogger(CardDAO.class);
     private static CardDAO instance;
-    private ConnectionPool connection;
+    private ConnectionPool connection = ConnectionPool.getInstance();
 
-    private CardDAO() {
+    private CardDAO() throws SQLException {
 
     }
 
-    public static synchronized CardDAO getInstance() {
+    public static synchronized CardDAO getInstance() throws SQLException {
         if (instance != null) return instance;
         instance = new CardDAO();
         return instance;
     }
 
+    public boolean isCardExist(int cardId){
+        boolean isExist = false;
+        try(PreparedStatement preparedStatement = connection
+                .getConnection().prepareStatement("SELECT * FROM card WHERE card_id = ?")){
+            preparedStatement.setInt(1,cardId);
+            preparedStatement.execute();
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                isExist = true;
+            }
+        } catch (SQLException e) {
+            log.error(e.getMessage());
+            throw new RuntimeException(e);
+        }
+        return  isExist;
+    }
     public void creatCardForCustomer(int id) {
         try (PreparedStatement preparedStatement = ConnectionPool.getInstance()
                 .getConnection().prepareStatement("INSERT INTO card(user_id,balance) VALUES(?,?)")) {
@@ -38,40 +54,16 @@ public class CardDAO {
         }
     }
 
-    // sorting by amount of balance
-    public void SortingByBalance(int userId) {
-        try (PreparedStatement preparedStatement = ConnectionPool.getInstance()
-                .getConnection().prepareStatement("SELECT * FROM card ORDER BY balance DESC ");
-             ResultSet resultSet = preparedStatement.executeQuery()) {
-            while (resultSet.next()) {
-
-            }
+    public void setCardStatus (int cardId,String status){
+        try(PreparedStatement preparedStatement = connection
+                .getConnection().prepareStatement("UPDATE card SET status = ? WHERE card_id =?")){
+            preparedStatement.setString(1,status);
+            preparedStatement.setInt(2,cardId);
+            preparedStatement.execute();
         } catch (SQLException e) {
             log.error(e.getMessage());
             throw new RuntimeException(e);
         }
-
-    }
-
-    public Integer findCardByUserId(int id) {
-        return null;
-    }
-
-    public Integer showUserBalanceById(int id) {
-        int balance = 0;
-        try (PreparedStatement preparedStatement = ConnectionPool.getInstance()
-                .getConnection().prepareStatement("SELECT * from card  ");
-             ResultSet resultSet = preparedStatement.executeQuery()) {
-            while (resultSet.next()) {
-                if (Objects.equals(resultSet.getInt(2), id)) {
-                    balance = resultSet.getInt(3);
-                }
-            }
-        } catch (SQLException e) {
-            log.error(e.getMessage());
-            throw new RuntimeException(e);
-        }
-        return balance;
     }
 
     public boolean updateBalanceByCardId(int cardId, int amount) {
@@ -97,6 +89,7 @@ public class CardDAO {
                     card = new Card(resultSet.getInt(1)
                             , resultSet.getInt(2)
                             , resultSet.getInt(3));
+                    card.setStatus(resultSet.getString(4));
                 }
             }
         } catch (SQLException e) {

@@ -25,7 +25,7 @@ public class ValidationForms {
             isTrue = false;
         if (!Pattern.matches("[0-9a-zA-Z!@#$%^&*]{6,}", passRep))
             isTrue = false;
-        isTrue = Objects.equals(customer.getPassword(), passRep);
+        if(Objects.equals(customer.getPassword(), passRep)) isTrue = false;
         return isTrue;
     }
 }
