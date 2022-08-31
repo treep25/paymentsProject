@@ -80,6 +80,7 @@ class SendTransferTest {
 
     @Test
     void doGetTestErrorEmailExisting() {
+
     }
 
     @Test
