@@ -1,5 +1,6 @@
 package com.payments.web.servlets;
 
+import com.payments.database.ConnectionPool;
 import com.payments.database.DAO.CardDAO;
 import com.payments.database.DAO.CustomerDAO;
 import com.payments.database.DAO.PaymentDAO;
@@ -33,23 +34,18 @@ public class SendTransfer extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-    }
-    // just CustomerDAO edit
-    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
         request.getSession().removeAttribute("warning");
         String recipientEmail = request.getParameter("recipient");
         int amount = Integer.parseInt(request.getParameter("amount"));
         Card card = (Card) request.getSession().getAttribute("card");
         Customer customer = (Customer) request.getSession().getAttribute("customer");
-        try {
-            customerDAO = CustomerDAO.getInstance();
-            cardDAO = CardDAO.getInstance();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+
+        ConnectionPool connectionPool = (ConnectionPool) request.getServletContext().getAttribute("connectionPool");
+        CustomerDAO customerDAO = new CustomerDAO(connectionPool);
+        CardDAO cardDAO= new CardDAO(connectionPool);
+        PaymentDAO paymentDAO = new PaymentDAO(connectionPool);
 
         if(!recipientEmail.isEmpty() && customerDAO.searchingByLogin(recipientEmail) && amount>0
                 && card.getBalance()>amount){
@@ -62,10 +58,10 @@ public class SendTransfer extends HttpServlet {
 
             try {
                 if(!cardDAO.transferP2P(card.getCardId(),recipientCardId , amount)){
-                    PaymentDAO.getInstance().addPayment(payment);
+                    paymentDAO.addPayment(payment);
                 }else{
                     payment.setPaymentStatus("Send");
-                    PaymentDAO.getInstance().addPayment(payment);
+                    paymentDAO.addPayment(payment);
                 }
 
             } catch (SQLException e) {
@@ -80,13 +76,11 @@ public class SendTransfer extends HttpServlet {
 
         }
         else {
-            request.getSession().setAttribute("warning","Email has`t existed or You haven`t enough money");
+            request.getSession().setAttribute("warning","email.has`t.existed.or.You.haven`t.enough.money");
             request.getRequestDispatcher("send.jsp").forward(request,response);
         }
 
 
     }
 
-
-        // cards send
 }

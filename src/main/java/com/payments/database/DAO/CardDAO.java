@@ -14,23 +14,21 @@ import java.util.Objects;
 public class CardDAO {
 
     private static final Logger log = LoggerFactory.getLogger(CardDAO.class);
-    private static CardDAO instance;
-    private ConnectionPool connection = ConnectionPool.getInstance();
+    private Connection con ;
 
-    private CardDAO() throws SQLException {
+    public CardDAO() {
 
     }
 
-    public static synchronized CardDAO getInstance() throws SQLException {
-        if (instance != null) return instance;
-        instance = new CardDAO();
-        return instance;
+    public CardDAO(ConnectionPool connection) {
+        this.con = connection.getConnection();
     }
+
 
     public boolean isCardExist(int cardId){
         boolean isExist = false;
-        try(PreparedStatement preparedStatement = connection
-                .getConnection().prepareStatement("SELECT * FROM card WHERE card_id = ?")){
+        try(PreparedStatement preparedStatement =
+                    con.prepareStatement("SELECT * FROM card WHERE card_id = ?")){
             preparedStatement.setInt(1,cardId);
             preparedStatement.execute();
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -44,8 +42,8 @@ public class CardDAO {
         return  isExist;
     }
     public void creatCardForCustomer(int id) {
-        try (PreparedStatement preparedStatement = ConnectionPool.getInstance()
-                .getConnection().prepareStatement("INSERT INTO card(user_id,balance) VALUES(?,?)")) {
+        try (PreparedStatement preparedStatement = con
+                .prepareStatement("INSERT INTO card(user_id,balance) VALUES(?,?)")) {
             preparedStatement.setInt(1, id);
             preparedStatement.setInt(2, 0);
             preparedStatement.execute();
@@ -55,8 +53,8 @@ public class CardDAO {
     }
 
     public void setCardStatus (int cardId,String status){
-        try(PreparedStatement preparedStatement = connection
-                .getConnection().prepareStatement("UPDATE card SET status = ? WHERE card_id =?")){
+        try(PreparedStatement preparedStatement = con
+                .prepareStatement("UPDATE card SET status = ? WHERE card_id =?")){
             preparedStatement.setString(1,status);
             preparedStatement.setInt(2,cardId);
             preparedStatement.execute();
@@ -67,8 +65,8 @@ public class CardDAO {
     }
 
     public boolean updateBalanceByCardId(int cardId, int amount) {
-        try (PreparedStatement preparedStatement = ConnectionPool.getInstance()
-                .getConnection().prepareStatement("UPDATE card SET balance = balance + ? WHERE card_id =?")) {
+        try (PreparedStatement preparedStatement = con
+                .prepareStatement("UPDATE card SET balance = balance + ? WHERE card_id =?")) {
             preparedStatement.setInt(1, amount);
             preparedStatement.setInt(2, cardId);
             preparedStatement.executeUpdate();
@@ -81,8 +79,8 @@ public class CardDAO {
 
     public Card getCardById(int id) {
         Card card = new Card();
-        try (PreparedStatement preparedStatement = ConnectionPool.getInstance()
-                .getConnection().prepareStatement("SELECT * from card");
+        try (PreparedStatement preparedStatement = con
+                .prepareStatement("SELECT * from card");
              ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
                 if (Objects.equals(resultSet.getInt(2), id)) {
@@ -101,8 +99,8 @@ public class CardDAO {
 
     public int getCardIdByUserId(int userId) {
         int cardId = 0;
-        try (PreparedStatement preparedStatement = ConnectionPool.getInstance()
-                .getConnection().prepareStatement("SELECT * FROM card WHERE user_id = ?")) {
+        try (PreparedStatement preparedStatement = con
+                .prepareStatement("SELECT * FROM card WHERE user_id = ?")) {
             preparedStatement.setInt(1, userId);
             preparedStatement.execute();
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -121,7 +119,6 @@ public class CardDAO {
     public boolean transferP2P(int cardId1, int cardId2, int value) throws SQLException {
 
         boolean isCorrect = false;
-        Connection con = ConnectionPool.getInstance().getConnection();
         con.setAutoCommit(false);
         try (PreparedStatement preparedStatement = con
                 .prepareStatement("UPDATE card SET balance = balance - ? WHERE card_id =?")) {
@@ -137,11 +134,10 @@ public class CardDAO {
                 preparedStatement1.setInt(1, value);
                 preparedStatement1.setInt(2, cardId2);
                 preparedStatement1.executeUpdate();
-                con.commit();
+
 
 
             } catch (SQLException e) {
-                isCorrect = false;
                 con.rollback();
                 log.error(e.getMessage());
 
@@ -153,7 +149,7 @@ public class CardDAO {
             con.rollback();
             log.error(e.getMessage());
         }
-        con.setAutoCommit(true);
+        con.setAutoCommit(true);//TODO wrong with autocomit
         return isCorrect;
     }
 }

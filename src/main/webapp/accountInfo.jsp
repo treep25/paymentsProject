@@ -9,15 +9,17 @@
 <body>
 
 <div class="container-fluid m-3 row gy-2">
-    <p class="fst-normal fs-3   ">Personal account information</p>
+    <fmt:setLocale value="${sessionScope.locale}"/>
+    <fmt:setBundle basename="resource"/>
+    <p class="fst-normal fs-3   "><fmt:message key="personal.customer.information"/></p>
 
     <div class="fs-2 row-cols-lg-3 ">
         <ol class="list-group list-group-numbered  ">
-            <li class="list-group-item fs-4 " >First name: <c:out value="${sessionScope.customer.getFirstName()}"/> </li>
-            <li class="list-group-item fs-4">Last name: <c:out value="${sessionScope.customer.getSecondName()}"/></li>
-            <li class="list-group-item fs-4">Login: <c:out value="${sessionScope.customer.getLogin()}"/></li>
-            <li class="list-group-item fs-4">Phone: <c:out value="${sessionScope.customer.getPhone()}"/></li>
-            <li class="list-group-item fs-4">Role: <c:out value="${sessionScope.role}"/></li>
+            <li class="list-group-item fs-4 " ><fmt:message key="name"/>: <c:out value="${sessionScope.customer.getFirstName()}"/> </li>
+            <li class="list-group-item fs-4"><fmt:message key="second.name"/>: <c:out value="${sessionScope.customer.getSecondName()}"/></li>
+            <li class="list-group-item fs-4"><fmt:message key="login"/>: <c:out value="${sessionScope.customer.getLogin()}"/></li>
+            <li class="list-group-item fs-4"><fmt:message key="phone"/>: <c:out value="${sessionScope.customer.getPhone()}"/></li>
+            <li class="list-group-item fs-4"><fmt:message key="role"/>: <fmt:message key="${sessionScope.role}"/></li>
         </ol>
     </div>
 </div>

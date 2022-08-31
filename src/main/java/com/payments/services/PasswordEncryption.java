@@ -1,19 +1,16 @@
-package com.payments.controller;
+package com.payments.services;
 
-import com.payments.database.DAO.CardDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 public class PasswordEncryption {
 
     private static final Logger log = LoggerFactory.getLogger(PasswordEncryption.class);
 
-    public static String encryptPasswordSha1(String password) throws UnsupportedEncodingException {
+    public static String encryptPasswordSha1(String password) {
 
         MessageDigest sha = null;
 

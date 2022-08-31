@@ -7,7 +7,7 @@ public abstract class SqlQuery {
         public static final String SELECT_CUSTOMERS_BY_LOGIN = "SELECT * FROM customer";
         public static final String INSERT_CUSTOMER = "INSERT INTO customer (first_name,second_name,login,password,phone) VALUES (?,?,?,?,?)";
         public static final String SELECT_CUSTOMER_LOGIN_AND_PASSWORD = "SELECT login,password FROM customer";
-        public static final String SELECT_CUSTOMER_LOGIN = "SELECT login FROM customer";
+        public static final String SELECT_CUSTOMER_LOGIN = "SELECT user_id FROM customer WHERE login = ?";
         public static final String SELECT_CUSTOMER_PHONE = "SELECT phone FROM customer";
         public static final String SELECT_CUSTOMER_LOGIN_Id = "SELECT login, user_id FROM customer";
         public static final String PAGINATION_ALL_CUSTOMERS_BY_ID_EARLIER = "SELECT (user_id) FROM customer ORDER BY user_id LIMIT ?, ?";

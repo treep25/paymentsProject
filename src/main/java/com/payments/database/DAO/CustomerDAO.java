@@ -1,12 +1,11 @@
 package com.payments.database.DAO;
 
-import com.payments.controller.PasswordEncryption;
+import com.payments.services.PasswordEncryption;
 import com.payments.database.ConnectionPool;
 import com.payments.entety.Customer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.UnsupportedEncodingException;
 import java.sql.*;
 import java.util.*;
 import java.util.List;
@@ -16,27 +15,25 @@ import static com.payments.database.SqlQuery.Customer.*;
 
 public class CustomerDAO {
 
-    ConnectionPool con = ConnectionPool.getInstance();
     private static final Logger log = LoggerFactory.getLogger(CustomerDAO.class);
-    private static CustomerDAO instance;
+    Connection con ;
 
 
-    private CustomerDAO() throws SQLException {
+    public CustomerDAO() {
 
     }
-
-    public static synchronized CustomerDAO getInstance() throws SQLException {
-        if (instance != null) return instance;
-        instance = new CustomerDAO();
-        return instance;
+    public CustomerDAO(ConnectionPool connectionPool) {
+        this.con = connectionPool.getConnection();
     }
+
+
     public void setPassword(String login,String password){
         try(PreparedStatement preparedStatement = con
-                .getConnection().prepareStatement(SET_PASSWORD)){
+                .prepareStatement(SET_PASSWORD)){
             preparedStatement.setString(1, PasswordEncryption.encryptPasswordSha1(password));
             preparedStatement.setString(2, login);
             preparedStatement.execute();
-        } catch (SQLException | UnsupportedEncodingException e) {
+        } catch (SQLException e) {
             log.error(e.getMessage());
             throw new RuntimeException(e);
         }
@@ -46,7 +43,7 @@ public class CustomerDAO {
         List<Customer> customerList = new LinkedList<>();
 
         try (PreparedStatement preparedStatement = con
-                .getConnection().prepareStatement(ALL_CUSTOMERS_WHERE_STATUS_PREPARE)) {
+                .prepareStatement(ALL_CUSTOMERS_WHERE_STATUS_PREPARE)) {
 
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -54,7 +51,7 @@ public class CustomerDAO {
                 customer.setUserID(resultSet.getInt(2));
                 customer.setStatusOfCard(resultSet.getString(4));
                 try (PreparedStatement preparedStatement1 = con
-                        .getConnection().prepareStatement(PAGINATION_ALL_CUSTOMERS_BY_3_TABLES)) {
+                        .prepareStatement(PAGINATION_ALL_CUSTOMERS_BY_3_TABLES)) {
                     preparedStatement1.setInt(1, customer.getUserID());
                     preparedStatement1.setInt(2, customer.getUserID());
                     preparedStatement1.setInt(3, customer.getUserID());
@@ -96,7 +93,7 @@ public class CustomerDAO {
         int start = currentPage * recordsPerPage - recordsPerPage;
 
         try (PreparedStatement preparedStatement = con
-                .getConnection().prepareStatement(getSQL(sorting))) {
+                .prepareStatement(getSQL(sorting))) {
 
             preparedStatement.setInt(1, start);
             preparedStatement.setInt(2, recordsPerPage);
@@ -108,7 +105,7 @@ public class CustomerDAO {
                 Customer customer = new Customer();
                 customer.setUserID(resultSet.getInt(1));
                 try (PreparedStatement preparedStatement1 = con
-                        .getConnection().prepareStatement(PAGINATION_ALL_CUSTOMERS_BY_3_TABLES)) {
+                        .prepareStatement(PAGINATION_ALL_CUSTOMERS_BY_3_TABLES)) {
                     preparedStatement1.setInt(1, customer.getUserID());
                     preparedStatement1.setInt(2, customer.getUserID());
                     preparedStatement1.setInt(3, customer.getUserID());
@@ -142,7 +139,7 @@ public class CustomerDAO {
     public Integer getNumberOfRows() {
         int number = 0;
         try (PreparedStatement preparedStatement = con
-                .getConnection().prepareStatement("SELECT COUNT(user_id) FROM customer")) {
+                .prepareStatement("SELECT COUNT(user_id) FROM customer")) {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 number = resultSet.getInt(1);
@@ -155,8 +152,8 @@ public class CustomerDAO {
     }
 
     public void addCustomer(Customer customer) {
-        try (PreparedStatement preparedStatement = ConnectionPool.getInstance()
-                .getConnection().prepareStatement(INSERT_CUSTOMER)) {
+        try (PreparedStatement preparedStatement = con
+                .prepareStatement(INSERT_CUSTOMER)) {
 
             preparedStatement.setString(1, customer.getFirstName());
             preparedStatement.setString(2, customer.getSecondName());
@@ -174,8 +171,7 @@ public class CustomerDAO {
 
     public Integer getCustomerId(Customer customer) {
         Integer id = null;
-        try (PreparedStatement preparedStatement =
-                     ConnectionPool.getInstance().getConnection().
+        try (PreparedStatement preparedStatement = con.
                              prepareStatement(SELECT_CUSTOMER_LOGIN_Id);
              ResultSet resultSet = preparedStatement.executeQuery()) {
 
@@ -195,8 +191,8 @@ public class CustomerDAO {
 
     public Customer getCustomerByLogin(String login) {
         Customer customer = null;
-        try (PreparedStatement preparedStatement = ConnectionPool.getInstance()
-                .getConnection().prepareStatement(SELECT_CUSTOMERS_BY_LOGIN);
+        try (PreparedStatement preparedStatement = con
+                .prepareStatement(SELECT_CUSTOMERS_BY_LOGIN);
              ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
                 if (Objects.equals(resultSet.getString("login"), login)) {
@@ -216,8 +212,8 @@ public class CustomerDAO {
 
     public boolean searchingByLoginAndPassword(String login, String password) {
         boolean answer = false;
-        try (PreparedStatement preparedStatement =
-                     ConnectionPool.getInstance().getConnection().prepareStatement(SELECT_CUSTOMER_LOGIN_AND_PASSWORD);
+        try (PreparedStatement preparedStatement = con
+                .prepareStatement(SELECT_CUSTOMER_LOGIN_AND_PASSWORD);
              ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
                 if (resultSet.getString(1).equals(login) && resultSet.getString(2).equals(password)) {
@@ -234,8 +230,8 @@ public class CustomerDAO {
 
     public boolean searchingByPhone(String phone) {
         boolean count = false;
-        try (PreparedStatement preparedStatement = ConnectionPool.getInstance()
-                .getConnection().prepareStatement(SELECT_CUSTOMER_PHONE);
+        try (PreparedStatement preparedStatement = con
+                .prepareStatement(SELECT_CUSTOMER_PHONE);
              ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
                 if (resultSet.getString(1).equals(phone)) {
@@ -250,14 +246,16 @@ public class CustomerDAO {
 
     public boolean searchingByLogin(String login) {
         boolean count = false;
-        try (PreparedStatement preparedStatement =
-                     ConnectionPool.getInstance().getConnection().prepareStatement(SELECT_CUSTOMER_LOGIN);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
-            while (resultSet.next()) {
-                if (resultSet.getString(1).equals(login)) {
-                    count = true;
-                }
+        try (PreparedStatement preparedStatement = con
+                .prepareStatement(SELECT_CUSTOMER_LOGIN)) {
+            preparedStatement.setString(1,login);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                count = true;
             }
+
         } catch (SQLException e) {
             log.error(e.getMessage());
             throw new RuntimeException(e);
@@ -268,8 +266,8 @@ public class CustomerDAO {
 
     public int showIdByLogin(String login) {
         int id = 0;
-        try (PreparedStatement preparedStatement =
-                     ConnectionPool.getInstance().getConnection().prepareStatement(SELECT_CUSTOMER_LOGIN_Id);
+        try (PreparedStatement preparedStatement = con
+                .prepareStatement(SELECT_CUSTOMER_LOGIN_Id);
              ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
                 if (resultSet.getString(1).equals(login)) {
@@ -286,8 +284,7 @@ public class CustomerDAO {
     }
     public boolean isExist(int id){
         boolean isExist = false;
-        try(PreparedStatement preparedStatement = con
-                .getConnection().prepareStatement(IS_EXIST_BY_ID)){
+        try(PreparedStatement preparedStatement = con.prepareStatement(IS_EXIST_BY_ID)){
             preparedStatement.setInt(1,id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if(resultSet.next()){
@@ -301,7 +298,7 @@ public class CustomerDAO {
     }
     public void deleteCustomer(int id){
         try (PreparedStatement preparedStatement = con
-                .getConnection().prepareStatement(REMOVE_CUSTOMER)){
+                .prepareStatement(REMOVE_CUSTOMER)){
             preparedStatement.setInt(1,id);
             preparedStatement.execute();
 

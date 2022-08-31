@@ -1,5 +1,6 @@
 package com.payments.web.servlets;
 
+import com.payments.database.ConnectionPool;
 import com.payments.database.DAO.CardDAO;
 import com.payments.database.DAO.CustomerDAO;
 import com.payments.entety.Customer;
@@ -16,14 +17,13 @@ import java.util.List;
 public class Requests extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        ConnectionPool connectionPool = (ConnectionPool) getServletContext().getAttribute("connectionPool");
+        CustomerDAO customerDAO = new CustomerDAO(connectionPool);
         List<Customer> list;
-        try{
-            list = CustomerDAO.getInstance().getAllCustomerWhereCardStatusPrepare();
-            request.getSession().setAttribute("requestList",list);
-            response.sendRedirect("http://localhost:8080/requests.jsp");
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        list = customerDAO.getAllCustomerWhereCardStatusPrepare();
+        request.getSession().setAttribute("requestList",list);
+        response.sendRedirect("http://localhost:8080/requests.jsp");
     }
 
     @Override

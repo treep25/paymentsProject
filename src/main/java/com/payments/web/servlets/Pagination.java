@@ -1,5 +1,6 @@
 package com.payments.web.servlets;
 
+import com.payments.database.ConnectionPool;
 import com.payments.database.DAO.PaymentDAO;
 import com.payments.entety.Payment;
 
@@ -28,18 +29,15 @@ public class Pagination extends HttpServlet {
         int currentPage = Integer.parseInt(request.getParameter("page"));
         int recordsPerPage = Integer.parseInt(request.getParameter("records"));
 
+        ConnectionPool connectionPool = (ConnectionPool) request.getServletContext().getAttribute("connectionPool");
+        PaymentDAO paymentDAO = new PaymentDAO(connectionPool);
+
         List<Payment> list;
-        try {
-            list = PaymentDAO.getInstance().getAllPaymentsByCustomerId(customerId,sorting,currentPage,recordsPerPage);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        list = paymentDAO.getAllPaymentsByCustomerId(customerId,sorting,currentPage,recordsPerPage);
+
         request.getSession().setAttribute("paymentList",list);
-        try {
-            rows = PaymentDAO.getInstance().getNumberOfRows(customerId);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+
+        rows = paymentDAO.getNumberOfRows(customerId);
 
         int nOfPages = rows / recordsPerPage;
 
@@ -49,12 +47,10 @@ public class Pagination extends HttpServlet {
         request.getSession().setAttribute("noOfPages", nOfPages);
         request.getSession().setAttribute("currentPage", currentPage);
         request.getSession().setAttribute("recordsPerPage", recordsPerPage);
+
         response.sendRedirect("http://localhost:8080/payments.jsp");
 
     }
 
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-    }
 }

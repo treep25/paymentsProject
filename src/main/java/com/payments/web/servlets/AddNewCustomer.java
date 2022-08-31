@@ -1,7 +1,7 @@
 package com.payments.web.servlets;
 
-import com.payments.controller.PasswordEncryption;
-import com.payments.controller.ValidationForms;
+import com.payments.database.ConnectionPool;
+import com.payments.services.PasswordEncryption;
 import com.payments.database.DAO.CardDAO;
 import com.payments.database.DAO.CustomerDAO;
 import com.payments.database.DAO.UserRoleDAO;
@@ -9,7 +9,6 @@ import com.payments.entety.Customer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,9 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 
-import static com.payments.controller.ValidationForms.validateCustomer;
+import static com.payments.services.ValidationForms.validateCustomer;
 
 @WebServlet(name = "AddNewCustomer", value = "/AddNewCustomer")
 public class AddNewCustomer extends HttpServlet {
@@ -36,14 +34,11 @@ public class AddNewCustomer extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.getSession().removeAttribute("error");
         request.getSession().removeAttribute("validationError");
-        request.getSession().removeAttribute("error1");
 
-        CustomerDAO customerDAO = null;
-        try {
-            customerDAO = CustomerDAO.getInstance();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        ConnectionPool connectionPool = (ConnectionPool) request.getServletContext().getAttribute("connectionPool");
+        CustomerDAO customerDAO = new CustomerDAO(connectionPool);
+        CardDAO cardDAO = new CardDAO(connectionPool);
+        UserRoleDAO userRoleDAO = new UserRoleDAO(connectionPool);
 
         Customer customer = new Customer(request.getParameter("name"),
                 request.getParameter("secName"),
@@ -53,30 +48,28 @@ public class AddNewCustomer extends HttpServlet {
 
         String passwordRep = request.getParameter("passwordRepeat");
         if (!customerDAO.searchingByLogin(customer.getLogin())
-                || !customerDAO.searchingByPhone(customer.getPhone())) {
+                && !customerDAO.searchingByPhone(customer.getPhone())) {
             if (validateCustomer(customer, passwordRep)) {
-                try {
-                    customer.setPassword(PasswordEncryption.encryptPasswordSha1(customer.getPassword()));
+                customer.setPassword(PasswordEncryption.encryptPasswordSha1(customer.getPassword()));
 
-                    CustomerDAO.getInstance().addCustomer(customer);
-                    int id = CustomerDAO.getInstance().getCustomerId(customer);
+                customerDAO.addCustomer(customer);
+                int id = customerDAO.getCustomerId(customer);
 
-                    customer.setUserID(id);
-                    CardDAO.getInstance().creatCardForCustomer(id);
-                    UserRoleDAO.getInstance().SetCustomerRoleByID4Customer(customer.getUserID());
+                customer.setUserID(id);
+                cardDAO.creatCardForCustomer(id);
+                userRoleDAO.SetCustomerRoleByID4Customer(customer.getUserID());
 
-                    response.sendRedirect("http://localhost:8080/signUp.jsp");
+                response.sendRedirect("http://localhost:8080/signUp.jsp");
 
-                } catch (SQLException e) {
-                    log.error(e.getMessage());
-                }
             } else {
-                request.getSession().setAttribute("validationError", "Fields are not correct");
+                log.error("Error in validation due to registration");
+                request.getSession().setAttribute("validationError", "validationError");
                 request.getRequestDispatcher("logIn.jsp").forward(request, response);
             }
         }
         else {
-            request.getSession().setAttribute("error", "This email or phone number has already exist");
+            log.error("Email or pass incorrect");
+            request.getSession().setAttribute("error", "error");
             request.getRequestDispatcher("logIn.jsp").forward(request, response);
         }
     }

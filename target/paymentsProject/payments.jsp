@@ -1,5 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="tags" prefix="tag" %>
 <html>
 <head>
     <title>Your payments</title>
@@ -7,15 +9,17 @@
     <%@ include file="/tags/nav.jspf" %>
 </head>
 <body>
+<fmt:setLocale value="${sessionScope.locale}"/>
+<fmt:setBundle basename="resource"/>
 <c:if test="${!sessionScope.paymentList.isEmpty()}">
 <table class="table table-hover">
     <thead>
     <tr>
-        <th scope="col">Sender</th>
-        <th scope="col">Recipient</th>
-        <th scope="col">Amount</th>
-        <th scope="col">Date</th>
-        <th scope="col">Status</th>
+        <th scope="col"><fmt:message key="sender"/></th>
+        <th scope="col"><fmt:message key="recip"/></th>
+        <th scope="col"><fmt:message key="amount"/></th>
+        <th scope="col"><fmt:message key="date"/></th>
+        <th scope="col"><fmt:message key="status"/></th>
     </tr>
     </thead>
     <tbody>
@@ -25,8 +29,8 @@
         <td><c:out value="${list.getEmailSender()}"/></td>
         <td><c:out value="${list.getEmailRecipient()}"/></td>
         <td><c:out value="${list.getAmount()}"/> ₴</td>
-        <td><c:out value="${list.getDate()}"/></td>
-        <td><c:out value="${list.getPaymentStatus()}"/></td>
+        <td><tag:date date="${list.getDate()}" locale="${sessionScope.locale}"/></td>
+        <td><fmt:message key="${list.getPaymentStatus()}"/></td>
 
 
     </tr>
@@ -41,12 +45,12 @@
         <ul class="pagination">
             <c:if test="${sessionScope.currentPage != 1}">
                 <li class="page-item"><a class="page-link"
-                   href="Pagination?records=${sessionScope.recordsPerPage}&page=${sessionScope.currentPage-1}&sorting=${sessionScope.sorting}">Previous</a>
+                   href="Pagination?records=${sessionScope.recordsPerPage}&page=${sessionScope.currentPage-1}&sorting=${sessionScope.sorting}"><fmt:message key="Previous"/></a>
                 </li>
             </c:if>
             <c:if test="${sessionScope.currentPage == 1}">
                 <li class="page-item disabled">
-                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true"><fmt:message key="Previous"/></a>
                 </li>
             </c:if>
 
@@ -67,12 +71,12 @@
 
             <c:if test="${sessionScope.currentPage lt sessionScope.noOfPages}">
                 <li class="page-item"><a class="page-link"
-                     href="Pagination?records=${sessionScope.recordsPerPage}&page=${sessionScope.currentPage+1}&sorting=${sessionScope.sorting}">Next</a>
+                     href="Pagination?records=${sessionScope.recordsPerPage}&page=${sessionScope.currentPage+1}&sorting=${sessionScope.sorting}"><fmt:message key="Next"/></a>
                 </li>
             </c:if>
             <c:if test="${sessionScope.currentPage ge sessionScope.noOfPages}">
                 <li class="page-item disabled">
-                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Next</a>
+                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true"><fmt:message key="Next"/></a>
                 </li>
             </c:if>
         </ul>
@@ -80,20 +84,20 @@
 <form action="Pagination" class="d-flex m-3">
     <input type="hidden" name="page" value="1">
     <div class="form-group ">
-        <label for="records">Number of records</label>
+        <label for="records"><fmt:message key="number.of.records"/></label>
         <select class="form-control" id="records" name="records">
-            <option value="5">5 items</option>
-            <option value="10" >10 items</option>
-            <option value="15">15 items</option>
+            <option value="5">5 <fmt:message key="items"/></option>
+            <option value="10" >10 <fmt:message key="items"/></option>
+            <option value="15">15 <fmt:message key="items"/></option>
         </select>
         <label for="records1">Sorting</label>
         <select class="form-control" id="records1" name="sorting">
-            <option value="1" >number ></option>
-            <option value="2" >number <</option>
-            <option value="3" >date ></option>
-            <option value="4" >date <</option>
+            <option value="1" ><fmt:message key="number"/> ></option>
+            <option value="2" ><fmt:message key="number"/> <</option>
+            <option value="3" ><fmt:message key="date1"/> ></option>
+            <option value="4" ><fmt:message key="date1"/> <</option>
         </select>
-        <button type="submit" class="btn btn-primary " >Submit</button>
+        <button type="submit" class="btn btn-primary " ><fmt:message key="submit"/></button>
     </div>
 </form>
 

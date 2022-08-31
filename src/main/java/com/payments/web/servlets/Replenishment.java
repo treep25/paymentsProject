@@ -1,5 +1,6 @@
 package com.payments.web.servlets;
 
+import com.payments.database.ConnectionPool;
 import com.payments.database.DAO.CardDAO;
 import com.payments.entety.Card;
 
@@ -21,20 +22,16 @@ public class Replenishment extends HttpServlet {
         Card card = (Card) request.getSession().getAttribute("card");
         int balance = card.getBalance();
         int amount = Integer.parseInt(request.getParameter("amount"));
+        ConnectionPool connectionPool = (ConnectionPool) request.getServletContext().getAttribute("connectionPool");
+        CardDAO cardDAO = new CardDAO(connectionPool);
         if (amount > 0) {
-            try {
-                if(CardDAO.getInstance().updateBalanceByCardId(card.getCardId(),amount)){
-                    card.setBalance(balance + amount);
-                }
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
+            if(cardDAO.updateBalanceByCardId(card.getCardId(),amount)){
+                card.setBalance(balance + amount);
             }
             request.getSession().setAttribute("card",card);
             response.sendRedirect("http://localhost:8080/cards.jsp");
         }else{
             request.getRequestDispatcher("replenishment.jsp").forward(request,response);
         }
-
     }
-    //если да то на cards.jsp если нет то на replenishment.jsp
 }

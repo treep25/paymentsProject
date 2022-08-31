@@ -1,4 +1,4 @@
-package com.payments.controller;
+package com.payments.services;
 
 import com.payments.entety.Customer;
 
@@ -17,7 +17,8 @@ public class ValidationForms {
             isTrue = false;
         }
 
-        if (!Pattern.matches("(([^<>()\\[\\]\\\\.,;:\\s@\"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))", customer.getLogin()))
+
+        if (!Pattern.matches("(([^<>()\\[\\]\\\\.,;:\\s@\"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3})|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))", customer.getLogin()))
             isTrue = false;
         if (!Pattern.matches("(\\s*)?(\\+)?([- _():=+]?\\d[- _():=+]?){10,14}(\\s*)?", customer.getPhone()))
             isTrue = false;
@@ -25,7 +26,7 @@ public class ValidationForms {
             isTrue = false;
         if (!Pattern.matches("[0-9a-zA-Z!@#$%^&*]{6,}", passRep))
             isTrue = false;
-        if(Objects.equals(customer.getPassword(), passRep)) isTrue = false;
+        if(!Objects.equals(customer.getPassword(), passRep)) isTrue = false;
         return isTrue;
     }
 }

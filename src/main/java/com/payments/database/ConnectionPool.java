@@ -11,15 +11,17 @@ public class ConnectionPool {
     private static final Logger log = LoggerFactory.getLogger(ConnectionPool.class);
     private static ConnectionPool instance;
     private Connection connection;
-    private String url = "jdbc:mysql://127.0.0.1:3306/payments";
+    private String url ;
     private String username = "root";
     private String password = "806127059";
 
-    private ConnectionPool() throws SQLException {
+
+    public ConnectionPool(String url)  {
+        this.url = url;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             this.connection = DriverManager.getConnection(url, username, password);
-        } catch (ClassNotFoundException ex) {
+        } catch (ClassNotFoundException | SQLException ex) {
             log.error(ex.getMessage());
             System.out.println("Everything is Failed : " + ex.getMessage());
         }
@@ -29,10 +31,5 @@ public class ConnectionPool {
         return connection;
     }
 
-    public static synchronized ConnectionPool getInstance() throws SQLException {
-        if(instance!= null) return instance;
-        instance = new ConnectionPool();
-        return instance;
-    }
 
 }

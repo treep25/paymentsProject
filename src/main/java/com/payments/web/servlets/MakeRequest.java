@@ -1,5 +1,6 @@
 package com.payments.web.servlets;
 
+import com.payments.database.ConnectionPool;
 import com.payments.database.DAO.CardDAO;
 import com.payments.entety.Card;
 
@@ -18,16 +19,14 @@ public class MakeRequest extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getSession().removeAttribute("warning");
+        request.getSession().removeAttribute("requestError");
+
+        ConnectionPool connectionPool = (ConnectionPool) request.getServletContext().getAttribute("connectionPool");
+        CardDAO cardDAO = new CardDAO(connectionPool);
+
         Card card = (Card) request.getSession().getAttribute("card");
-        System.out.println(card.toString());
-        System.out.println(card.getStatus());
-        try {
-            CardDAO.getInstance().setCardStatus(card.getCardId(),"Prepare");
-            request.getSession().setAttribute("warning","You have already made request");
-            response.sendRedirect("http://localhost:8080/personalCustomerAccount.jsp");
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        cardDAO.setCardStatus(card.getCardId(),"Prepare");
+        request.getSession().setAttribute("requestError","requeest.error");
+        response.sendRedirect("http://localhost:8080/personalCustomerAccount.jsp");
     }
 }

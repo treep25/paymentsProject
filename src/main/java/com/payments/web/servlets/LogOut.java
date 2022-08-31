@@ -5,6 +5,7 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Enumeration;
 import java.util.List;
 
 @WebServlet(name = "LogOut", value = "/LogOut")
@@ -18,7 +19,9 @@ public class LogOut extends HttpServlet {
         request.getSession().removeAttribute("listOfCustomers");
         request.getSession().removeAttribute("paymentList");
         request.getSession().removeAttribute("requestList");
-
+        request.getSession().removeAttribute("locale");
+        request.getSession().removeAttribute("error");
+        request.getSession().removeAttribute("error1");
         response.sendRedirect("http://localhost:8080/mainPage.jsp");
     }
 

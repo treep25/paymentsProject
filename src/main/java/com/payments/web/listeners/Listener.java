@@ -1,8 +1,12 @@
 package com.payments.web.listeners;
 
+import com.payments.database.ConnectionPool;
+
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
+import java.net.ConnectException;
+import java.sql.SQLException;
 
 @WebListener
 public class Listener implements ServletContextListener, HttpSessionListener, HttpSessionAttributeListener {
@@ -11,37 +15,14 @@ public class Listener implements ServletContextListener, HttpSessionListener, Ht
     }
 
     @Override
-    public void contextInitialized(ServletContextEvent sce) {
-        /* This method is called when the servlet context is initialized(when the Web application is deployed). */
+    public void contextInitialized(ServletContextEvent contextEvent) {
+        ServletContext servletContext = contextEvent.getServletContext();
+
+        ConnectionPool connectionPool = new ConnectionPool("jdbc:mysql://127.0.0.1:3306/payments");
+        servletContext.setAttribute("connectionPool", connectionPool);
+
+
     }
 
-    @Override
-    public void contextDestroyed(ServletContextEvent sce) {
-        /* This method is called when the servlet Context is undeployed or Application Server shuts down. */
-    }
 
-    @Override
-    public void sessionCreated(HttpSessionEvent se) {
-        /* Session is created. */
-    }
-
-    @Override
-    public void sessionDestroyed(HttpSessionEvent se) {
-        /* Session is destroyed. */
-    }
-
-    @Override
-    public void attributeAdded(HttpSessionBindingEvent sbe) {
-        /* This method is called when an attribute is added to a session. */
-    }
-
-    @Override
-    public void attributeRemoved(HttpSessionBindingEvent sbe) {
-        /* This method is called when an attribute is removed from a session. */
-    }
-
-    @Override
-    public void attributeReplaced(HttpSessionBindingEvent sbe) {
-        /* This method is called when an attribute is replaced in a session. */
-    }
 }

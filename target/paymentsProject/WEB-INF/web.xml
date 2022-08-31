@@ -4,7 +4,6 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
 
-
     <filter>
         <filter-name>SecureFilter</filter-name>
         <filter-class>com.payments.web.filters.SecureFilter</filter-class>
@@ -46,5 +45,13 @@
         <url-pattern>/request.jsp</url-pattern>
         <url-pattern>/topUp.jsp</url-pattern>
     </filter-mapping>
+
+    <jsp-config>
+        <taglib>
+            <taglib-uri>tags</taglib-uri>
+            <taglib-location>/WEB-INF/tags.tld</taglib-location>
+        </taglib>
+    </jsp-config>
+
 
 </web-app>
