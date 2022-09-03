@@ -23,7 +23,7 @@ public class DeleteCustomer extends HttpServlet {
         int id = Integer.parseInt(request.getParameter("id"));
         if(customerDAO.isExist(id) && !request.getSession().getAttribute("customerId").equals(id)){
             customerDAO.deleteCustomer(id);
-            response.sendRedirect("http://localhost:8080/PaginationAllCustomers?records=5&page=1&sorting=1");
+            response.sendRedirect("/PaginationAllCustomers?records=5&page=1&sorting=1");
         }else {
             request.getSession().setAttribute("warning","this.customer.is.not.exist");
             request.getRequestDispatcher("removeCustomer.jsp").forward(request,response);

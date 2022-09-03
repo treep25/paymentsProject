@@ -21,10 +21,20 @@ public abstract class SqlQuery {
         public static final String IS_EXIST_BY_ID = "SELECT * FROM customer WHERE user_id=?";
         public static final String REMOVE_CUSTOMER = "DELETE FROM customer WHERE user_id = ?";
         public static final String SET_PASSWORD = "UPDATE customer SET password = ? WHERE login = ?";
+        public static final String COUNT_NUM_OF_ROWS = "SELECT COUNT(user_id) FROM customer";
+
 
 
     }
     public static class Card {
+        public static final String GET_WHERE_CARD_ID = "SELECT * FROM card WHERE card_id = ?";
+        public static final String SET_CARD_BY_VALUES = "INSERT INTO card(user_id,balance) VALUES(?,?)";
+        public static final String UPDATE_STATUS_BY_CARD_ID = "UPDATE card SET status = ? WHERE card_id =?";
+        public static final String UPDATE_BALANCE_RECIPIENT ="UPDATE card SET balance = balance + ? WHERE card_id =?" ;
+        public static final String SELECT_ALL_FROM_CARD ="SELECT * from card" ;
+        public static final String SELECT_ALL_FROM_CARD_WHERE_ID ="SELECT * FROM card WHERE user_id = ?" ;
+        public static final String UPDATE_TRANSFER_SENDER ="UPDATE card SET balance = balance - ? WHERE card_id =?" ;
+        public static final String UPDATE_TRANSFER_RECIPIENT ="UPDATE card SET balance = balance + ? WHERE card_id =?" ;
 
     }
     public static class Payment {
@@ -33,14 +43,13 @@ public abstract class SqlQuery {
         public static final String PAGINATION_ALL_PAYMENTS_LATEST = "SELECT * FROM payment WHERE user_id = ? ORDER BY payment_id DESC LIMIT ?, ?";
         public static final String PAGINATION_ALL_PAYMENTS_BY_DATE_LATEST = "SELECT * FROM payment WHERE user_id = ? ORDER BY date DESC LIMIT ?,?";
         public static final String COUNT_RAWS_PAYMENTS_BY_USER = "SELECT COUNT(user_id) FROM payment WHERE user_id = ?";
+        public static final String INSERT_INTO_PAYMENTS_ALL = "INSERT INTO payment VALUES (DEFAULT,?,?,?,?,?,?)";
 
     }
-    public static class PaymentStatus {
 
-
-    }
     public static class UserRole {
         public static final String INSERT_ROLE_USER = "INSERT INTO user_role (user_id,user_role) VALUES (?,?)";
-        public static final String SELECT_ROLE_USER = "SELECT * FROM user_role";
+        public static final String SELECT_ALL_WHERE_ID = "SELECT * FROM user_role WHERE user_id = ? ";
+
     }
 }

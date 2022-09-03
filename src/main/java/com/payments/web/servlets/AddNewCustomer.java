@@ -59,7 +59,7 @@ public class AddNewCustomer extends HttpServlet {
                 cardDAO.creatCardForCustomer(id);
                 userRoleDAO.SetCustomerRoleByID4Customer(customer.getUserID());
 
-                response.sendRedirect("http://localhost:8080/signUp.jsp");
+                response.sendRedirect("/signUp.jsp");
 
             } else {
                 log.error("Error in validation due to registration");

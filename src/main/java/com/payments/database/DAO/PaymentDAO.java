@@ -83,7 +83,7 @@ public class PaymentDAO {
 
     public void addPayment(Payment payment ){
         try(PreparedStatement preparedStatement = con
-                .prepareStatement("INSERT INTO payment VALUES (DEFAULT,?,?,?,?,?,?)")){
+                .prepareStatement(INSERT_INTO_PAYMENTS_ALL)){
 
            preparedStatement.setInt(1,payment.getUserId());
            preparedStatement.setString(2,payment.getEmailSender());

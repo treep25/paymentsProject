@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static com.payments.database.SqlQuery.UserRole.INSERT_ROLE_USER;
+import static com.payments.database.SqlQuery.UserRole.SELECT_ALL_WHERE_ID;
 
 public class UserRoleDAO {
 
@@ -53,7 +54,7 @@ public class UserRoleDAO {
     public String showUserRoleById(int id) {
         String userRole = null;
         try (PreparedStatement preparedStatement = con
-                .prepareStatement("SELECT * FROM user_role WHERE user_id = ? ")) {
+                .prepareStatement(SELECT_ALL_WHERE_ID)) {
             preparedStatement.setInt(1, id);
             preparedStatement.execute();
             ResultSet resultSet = preparedStatement.executeQuery();

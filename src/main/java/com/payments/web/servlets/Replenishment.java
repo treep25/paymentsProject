@@ -29,7 +29,7 @@ public class Replenishment extends HttpServlet {
                 card.setBalance(balance + amount);
             }
             request.getSession().setAttribute("card",card);
-            response.sendRedirect("http://localhost:8080/cards.jsp");
+            response.sendRedirect("/cards.jsp");
         }else{
             request.getRequestDispatcher("replenishment.jsp").forward(request,response);
         }

@@ -23,7 +23,7 @@ public class Requests extends HttpServlet {
         List<Customer> list;
         list = customerDAO.getAllCustomerWhereCardStatusPrepare();
         request.getSession().setAttribute("requestList",list);
-        response.sendRedirect("http://localhost:8080/requests.jsp");
+        response.sendRedirect("/requests.jsp");
     }
 
     @Override

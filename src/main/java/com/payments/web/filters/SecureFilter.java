@@ -33,7 +33,7 @@ public class SecureFilter implements Filter {
             chain.doFilter(req, res);
         }
         else {
-            res.sendRedirect("http://localhost:8080/signUp.jsp");
+            res.sendRedirect("/signUp.jsp");
         }
     }
 }

@@ -26,7 +26,7 @@ public class ForgotPass extends HttpServlet {
 
         if(customerDAO.searchingByLogin(login)){
             customerDAO.setPassword(login,password);
-            response.sendRedirect("http://localhost:8080/signUp.jsp");
+            response.sendRedirect("/signUp.jsp");
         }else {
             request.getSession().setAttribute("errorForgotPass","forgot.password.session.error");
             request.getRequestDispatcher("forgotPass.jsp").forward(request,response);

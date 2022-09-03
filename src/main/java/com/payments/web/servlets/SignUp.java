@@ -34,6 +34,7 @@ public class SignUp extends HttpServlet {
         request.getSession().removeAttribute("validationError");
         request.getSession().removeAttribute("error1");
 
+
         ConnectionPool connectionPool = (ConnectionPool) request.getServletContext().getAttribute("connectionPool");
         CustomerDAO customerDAO = new CustomerDAO(connectionPool);
         UserRoleDAO userRoleDAO = new UserRoleDAO(connectionPool);
@@ -55,7 +56,8 @@ public class SignUp extends HttpServlet {
             request.getSession().setAttribute("role", userRole);
             request.getSession().setAttribute("locale", "en");
 
-            response.sendRedirect("http://localhost:8080/personalCustomerAccount.jsp");
+            response.sendRedirect("/personalCustomerAccount.jsp");
+
         } else {
             request.getSession().setAttribute("error1", "incorrect.login.or.pass");
             request.getRequestDispatcher("signUp.jsp").forward(request, response);

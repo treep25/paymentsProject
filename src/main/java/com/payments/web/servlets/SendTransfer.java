@@ -72,7 +72,7 @@ public class SendTransfer extends HttpServlet {
             card.setBalance(card.getBalance()-amount);
             request.getSession().setAttribute("card",card);
 
-            response.sendRedirect("http://localhost:8080/cards.jsp");
+            response.sendRedirect("/cards.jsp");
 
         }
         else {

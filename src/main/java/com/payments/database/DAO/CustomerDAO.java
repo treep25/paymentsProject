@@ -36,6 +36,7 @@ public class CustomerDAO {
         } catch (SQLException e) {
             log.error(e.getMessage());
             throw new RuntimeException(e);
+
         }
     }
 
@@ -139,7 +140,7 @@ public class CustomerDAO {
     public Integer getNumberOfRows() {
         int number = 0;
         try (PreparedStatement preparedStatement = con
-                .prepareStatement("SELECT COUNT(user_id) FROM customer")) {
+                .prepareStatement(COUNT_NUM_OF_ROWS)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 number = resultSet.getInt(1);

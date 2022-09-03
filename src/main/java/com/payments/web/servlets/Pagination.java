@@ -48,7 +48,7 @@ public class Pagination extends HttpServlet {
         request.getSession().setAttribute("currentPage", currentPage);
         request.getSession().setAttribute("recordsPerPage", recordsPerPage);
 
-        response.sendRedirect("http://localhost:8080/payments.jsp");
+        response.sendRedirect("/payments.jsp");
 
     }
 

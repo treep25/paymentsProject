@@ -28,7 +28,7 @@ public class ReplenishmentToCustomer extends HttpServlet {
             Card card = cardDAO.getCardById(customerId);
             if (cardDAO.isCardExist(card.getCardId())) {
                 cardDAO.updateBalanceByCardId(card.getCardId(), amount);
-                response.sendRedirect("http://localhost:8080/topUp.jsp");
+                response.sendRedirect("/topUp.jsp");
             } else {
                 request.getSession().setAttribute("error", "card.isn`t.exist");
                 request.getRequestDispatcher("topUp.jsp").forward(request, response);

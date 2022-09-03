@@ -42,7 +42,7 @@ public class PaginationAllCustomers extends HttpServlet {
         request.getSession().setAttribute("noOfPages", nOfPages);
         request.getSession().setAttribute("currentPage", currentPage);
         request.getSession().setAttribute("recordsPerPage", recordsPerPage);
-        response.sendRedirect("http://localhost:8080/customers.jsp");
+        response.sendRedirect("/customers.jsp");
     }
 
 }

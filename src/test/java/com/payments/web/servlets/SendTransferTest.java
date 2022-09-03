@@ -38,6 +38,7 @@ class SendTransferTest {
     }
     @AfterEach
     public void afterStart() throws SQLException {
+        con.setAutoCommit(false);
         con.rollback();
     }
 
@@ -58,7 +59,7 @@ class SendTransferTest {
 
         String emailRecipient ="testCardDao@1gmail.com";
         int amount = 100;
-        Card card = new Card();
+        Card card = new Card();//TODO 3
         card.setBalance(1000);
         Customer customer = new Customer();
         customer.setLogin("testCardDao@gmail.com");
@@ -74,7 +75,7 @@ class SendTransferTest {
 
         sendTransfer.doPost(request,response);
 
-        verify(response).sendRedirect("http://localhost:8080/cards.jsp"); //TODO wrong with autocomitTEST
+        verify(response).sendRedirect("http://localhost:8080/cards.jsp");
 
     }
 

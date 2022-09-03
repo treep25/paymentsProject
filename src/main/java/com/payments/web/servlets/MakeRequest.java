@@ -27,6 +27,6 @@ public class MakeRequest extends HttpServlet {
         Card card = (Card) request.getSession().getAttribute("card");
         cardDAO.setCardStatus(card.getCardId(),"Prepare");
         request.getSession().setAttribute("requestError","requeest.error");
-        response.sendRedirect("http://localhost:8080/personalCustomerAccount.jsp");
+        response.sendRedirect("/personalCustomerAccount.jsp");
     }
 }

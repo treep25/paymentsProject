@@ -23,6 +23,6 @@ public class AccessWhenAdmin implements Filter {
 
         if(session.getAttribute("role").equals("Admin")){
             chain.doFilter(req,res);
-        }else res.sendRedirect("http://localhost:8080/personalCustomerAccount.jsp");
+        }else res.sendRedirect("/personalCustomerAccount.jsp");
     }
 }
