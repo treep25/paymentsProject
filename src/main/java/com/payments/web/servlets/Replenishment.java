@@ -8,27 +8,31 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
-import java.sql.SQLException;
+import java.util.List;
 
 @WebServlet(name = "Replenishment", value = "/Replenishment")
 public class Replenishment extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doPost(request,response);
+        int cardNumber = Integer.parseInt(request.getParameter("card"));
+        request.getSession().setAttribute("cardNumber",cardNumber);
+        response.sendRedirect("/replenishment.jsp");
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Card card = (Card) request.getSession().getAttribute("card");
-        int balance = card.getBalance();
+        List<Card> cardList = (List<Card>) request.getSession().getAttribute("cards");
+        int cardNumber = (int) request.getSession().getAttribute("cardNumber");
         int amount = Integer.parseInt(request.getParameter("amount"));
+
         ConnectionPool connectionPool = (ConnectionPool) request.getServletContext().getAttribute("connectionPool");
         CardDAO cardDAO = new CardDAO(connectionPool);
+
         if (amount > 0) {
-            if(cardDAO.updateBalanceByCardId(card.getCardId(),amount)){
-                card.setBalance(balance + amount);
+            if(cardDAO.updateBalanceByCardNumber(cardList.get(cardNumber-1).getNumberOfCard(),amount)){
+                cardList.get(cardNumber-1).setBalance(cardList.get(cardNumber-1).getBalance()+amount);
             }
-            request.getSession().setAttribute("card",card);
+            request.getSession().setAttribute("cards",cardList);
             response.sendRedirect("/cards.jsp");
         }else{
             request.getRequestDispatcher("replenishment.jsp").forward(request,response);

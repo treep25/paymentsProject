@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Locale;
 
 import static com.payments.services.ValidationForms.validateCustomer;
 
@@ -29,11 +30,11 @@ public class AddNewCustomer extends HttpServlet {
         doPost(request, response);
     }
 
-
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.getSession().removeAttribute("error");
         request.getSession().removeAttribute("validationError");
+
 
         ConnectionPool connectionPool = (ConnectionPool) request.getServletContext().getAttribute("connectionPool");
         CustomerDAO customerDAO = new CustomerDAO(connectionPool);
@@ -56,7 +57,7 @@ public class AddNewCustomer extends HttpServlet {
                 int id = customerDAO.getCustomerId(customer);
 
                 customer.setUserID(id);
-                cardDAO.creatCardForCustomer(id);
+                cardDAO.creatCard(id);
                 userRoleDAO.SetCustomerRoleByID4Customer(customer.getUserID());
 
                 response.sendRedirect("/signUp.jsp");

@@ -14,7 +14,7 @@
 
 <div class="d-grid gap-2 col-2 mx-auto m-4">
     <div class="container-fluid m-3 row gy-2">
-        <p class="fst-normal fs-3 "><fmt:message key="block.user`s.card"/></p>
+        <p class="fst-normal fs-3 "><fmt:message key="delete.customer"/></p>
     </div>
     <div class="form" >
         <form action="DeleteCustomer" method="post" novalidate>

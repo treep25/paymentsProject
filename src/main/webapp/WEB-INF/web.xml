@@ -25,6 +25,7 @@
         <url-pattern>/ReplenishmentToCustomer</url-pattern>
         <url-pattern>/StatusOfCard</url-pattern>
         <url-pattern>/MakeRequest</url-pattern>
+        <url-pattern>/AddCard</url-pattern>
     </filter-mapping>
 
 
@@ -36,7 +37,6 @@
         <filter-name>AccessWhenAdmin</filter-name>
         <url-pattern>/PaginationAllCustomers</url-pattern>
         <url-pattern>/ReplenishmentToCustomer</url-pattern>
-        <url-pattern>/StatusOfCard</url-pattern>
         <url-pattern>/DeleteCustomers</url-pattern>
         <url-pattern>/Request</url-pattern>
         <url-pattern>/StatusOfCard</url-pattern>
@@ -52,18 +52,18 @@
             <taglib-location>/WEB-INF/tags.tld</taglib-location>
         </taglib>
     </jsp-config>
-    <error-page>
-        <error-code>404</error-code>
-        <location>/errors/404.html</location>
-    </error-page>
-    <error-page>
-        <error-code>500</error-code>
-        <location>/errors/500.html</location>
-    </error-page>
-    <error-page>
-        <exception-type>java.lang.RuntimeException</exception-type>
-        <location>/errors/errror.jsp</location>
-    </error-page>
+<!--    <error-page>-->
+<!--        <error-code>404</error-code>-->
+<!--        <location>/errors/404.html</location>-->
+<!--    </error-page>-->
+<!--    <error-page>-->
+<!--        <error-code>500</error-code>-->
+<!--        <location>/errors/500.html</location>-->
+<!--    </error-page>-->
+<!--    <error-page>-->
+<!--        <exception-type>java.lang.RuntimeException</exception-type>-->
+<!--        <location>/errors/errror.jsp</location>-->
+<!--    </error-page>-->
 
 
 </web-app>

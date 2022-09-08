@@ -2,14 +2,11 @@ package com.payments.web.servlets;
 
 import com.payments.database.ConnectionPool;
 import com.payments.database.DAO.CardDAO;
-import com.payments.database.DAO.CustomerDAO;
-import com.payments.entety.Card;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
-import java.sql.SQLException;
 
 @WebServlet(name = "ReplenishmentToCustomer", value = "/ReplenishmentToCustomer")
 public class ReplenishmentToCustomer extends HttpServlet {
@@ -19,15 +16,12 @@ public class ReplenishmentToCustomer extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.getSession().removeAttribute("error");
         int amount = Integer.parseInt(request.getParameter("amount"));
-        int customerId = Integer.parseInt(request.getParameter("recipient"));
-
+        String customerNumberCard = request.getParameter("recipient");
         ConnectionPool connectionPool = (ConnectionPool) request.getServletContext().getAttribute("connectionPool");
         CardDAO cardDAO = new CardDAO(connectionPool);
-
         if (amount > 0) {
-            Card card = cardDAO.getCardById(customerId);
-            if (cardDAO.isCardExist(card.getCardId())) {
-                cardDAO.updateBalanceByCardId(card.getCardId(), amount);
+            if (cardDAO.isCardExist(customerNumberCard) && cardDAO.getStatusOfCard(customerNumberCard).equals("Active")) {
+                cardDAO.updateBalanceByCardNumber(customerNumberCard, amount);
                 response.sendRedirect("/topUp.jsp");
             } else {
                 request.getSession().setAttribute("error", "card.isn`t.exist");

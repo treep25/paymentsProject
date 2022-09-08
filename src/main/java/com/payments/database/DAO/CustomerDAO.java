@@ -1,5 +1,6 @@
 package com.payments.database.DAO;
 
+import com.payments.database.SqlQuery;
 import com.payments.services.PasswordEncryption;
 import com.payments.database.ConnectionPool;
 import com.payments.entety.Customer;
@@ -42,32 +43,23 @@ public class CustomerDAO {
 
     public List<Customer> getAllCustomerWhereCardStatusPrepare() {
         List<Customer> customerList = new LinkedList<>();
-
         try (PreparedStatement preparedStatement = con
-                .prepareStatement(ALL_CUSTOMERS_WHERE_STATUS_PREPARE)) {
-
+                .prepareStatement(PAGINATION_ALL_CUSTOMERS_WHERE_STATUS_PREPARE)) {
             ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                Customer customer = new Customer();
-                customer.setUserID(resultSet.getInt(2));
-                customer.setStatusOfCard(resultSet.getString(4));
-                try (PreparedStatement preparedStatement1 = con
-                        .prepareStatement(PAGINATION_ALL_CUSTOMERS_BY_3_TABLES)) {
-                    preparedStatement1.setInt(1, customer.getUserID());
-                    preparedStatement1.setInt(2, customer.getUserID());
-                    preparedStatement1.setInt(3, customer.getUserID());
-                    ResultSet resultSet1 = preparedStatement1.executeQuery();
-                    while (resultSet1.next()) {
-                        customer.setFirstName(resultSet1.getString(2));
-                        customer.setSecondName(resultSet1.getString(3));
-                        customer.setLogin(resultSet1.getString(4));
-                        customer.setPhone(resultSet1.getString(6));
-                        customer.setRole(resultSet1.getString(8));
-                        customer.setBalance(resultSet1.getInt(11));
-                        customerList.add(customer);
-                    }
+            while (resultSet.next()){
+                if(!resultSet.getString(9).equals("Admin")){
+                    Customer customer = new Customer();
+                    customer.setUserID(resultSet.getInt(1));
+                    customer.setFirstName(resultSet.getString(2));
+                    customer.setSecondName(resultSet.getString(3));
+                    customer.setLogin(resultSet.getString(4));
+                    customer.setPhone(resultSet.getString(5));
+                    customer.setCardNum(resultSet.getString(6));
+                    customer.setBalance(resultSet.getInt(7));
+                    customer.setStatusOfCard(resultSet.getString(8));
+                    customer.setRole(resultSet.getString(9));
 
-
+                    customerList.add(customer);
                 }
             }
         } catch (SQLException e) {
@@ -76,7 +68,6 @@ public class CustomerDAO {
         }
         return customerList;
     }
-
     private String getSQL(int sorting) {
         if (Objects.equals(sorting, 1)) return PAGINATION_ALL_CUSTOMERS_BY_ID_EARLIER;
         else if (Objects.equals(sorting, 2)) return PAGINATION_ALL_CUSTOMERS_BY_ID_LATEST;
@@ -87,45 +78,33 @@ public class CustomerDAO {
     }
 
     public List<Customer> getAllCustomers(int sorting, int currentPage, int recordsPerPage) {
-
-
         List<Customer> customerList = new LinkedList<>();
 
         int start = currentPage * recordsPerPage - recordsPerPage;
 
         try (PreparedStatement preparedStatement = con
-                .prepareStatement(getSQL(sorting))) {
+                .prepareStatement(getSQL(sorting))){
 
             preparedStatement.setInt(1, start);
             preparedStatement.setInt(2, recordsPerPage);
             preparedStatement.execute();
-
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            while (resultSet.next()) {
-                Customer customer = new Customer();
-                customer.setUserID(resultSet.getInt(1));
-                try (PreparedStatement preparedStatement1 = con
-                        .prepareStatement(PAGINATION_ALL_CUSTOMERS_BY_3_TABLES)) {
-                    preparedStatement1.setInt(1, customer.getUserID());
-                    preparedStatement1.setInt(2, customer.getUserID());
-                    preparedStatement1.setInt(3, customer.getUserID());
-                    preparedStatement1.execute();
-                    ResultSet resultSet1 = preparedStatement1.executeQuery();
+            while (resultSet.next()){
+                if(!resultSet.getString(9).equals("Admin")){
+                    Customer customer = new Customer();
 
-                    while (resultSet1.next()) {
-                        if (!resultSet1.getString(8).equals("Admin")) {
-                            customer.setFirstName(resultSet1.getString(2));
-                            customer.setSecondName(resultSet1.getString(3));
-                            customer.setLogin(resultSet1.getString(4));
-                            customer.setPhone(resultSet1.getString(6));
-                            customer.setRole(resultSet1.getString(8));
-                            customer.setBalance(resultSet1.getInt(11));
-                            customer.setStatusOfCard(resultSet1.getString(12));
+                    customer.setUserID(resultSet.getInt(1));
+                    customer.setFirstName(resultSet.getString(2));
+                    customer.setSecondName(resultSet.getString(3));
+                    customer.setLogin(resultSet.getString(4));
+                    customer.setPhone(resultSet.getString(5));
+                    customer.setCardNum(resultSet.getString(6));
+                    customer.setBalance(resultSet.getInt(7));
+                    customer.setStatusOfCard(resultSet.getString(8));
+                    customer.setRole(resultSet.getString(9));
 
-                            customerList.add(customer);
-                        }
-                    }
+                    customerList.add(customer);
 
                 }
             }
@@ -210,7 +189,6 @@ public class CustomerDAO {
         }
         return customer;
     }
-
     public boolean searchingByLoginAndPassword(String login, String password) {
         boolean answer = false;
         try (PreparedStatement preparedStatement = con
@@ -224,11 +202,9 @@ public class CustomerDAO {
         } catch (SQLException e) {
             log.error(e.getMessage());
             throw new RuntimeException(e);
-
         }
         return answer;
     }
-
     public boolean searchingByPhone(String phone) {
         boolean count = false;
         try (PreparedStatement preparedStatement = con
@@ -263,25 +239,6 @@ public class CustomerDAO {
 
         }
         return count;
-    }
-
-    public int showIdByLogin(String login) {
-        int id = 0;
-        try (PreparedStatement preparedStatement = con
-                .prepareStatement(SELECT_CUSTOMER_LOGIN_Id);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
-            while (resultSet.next()) {
-                if (resultSet.getString(1).equals(login)) {
-                    id = resultSet.getInt(2);
-                }
-            }
-        } catch (SQLException e) {
-            log.error(e.getMessage());
-            throw new RuntimeException(e);
-
-        }
-        return id;
-
     }
     public boolean isExist(int id){
         boolean isExist = false;

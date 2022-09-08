@@ -1,19 +1,31 @@
 package com.payments.entety;
 
+import java.util.Objects;
+
 public class Card {
 
     private int cardId;
     private int userId;
     private int balance = 0;
     private String status ;
+    private String numberOfCard ;
+
+    public String getNumberOfCard() {
+        return numberOfCard;
+    }
+
+    public void setNumberOfCard(String numberOfCard) {
+        this.numberOfCard = numberOfCard;
+    }
 
     public Card() {
     }
 
-    public Card(int cardId, int userId, int balance) {
+    public Card(int cardId, int userId,String numberOfCard, int balance) {
         this.cardId = cardId;
         this.userId = userId;
         this.balance = balance;
+        this.numberOfCard = numberOfCard;
     }
 
     public String getStatus() {
@@ -57,5 +69,6 @@ public class Card {
                 ", balance=" + balance +
                 '}';
     }
+
 
 }

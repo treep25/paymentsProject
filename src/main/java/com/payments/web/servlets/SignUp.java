@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Set;
 
 @WebServlet(name = "SignUp", value = "/SignUp")
 public class SignUp extends HttpServlet {
@@ -23,36 +25,33 @@ public class SignUp extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        doPost(request,response);
     }
 
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String login = request.getParameter("email");
-        String password = request.getParameter("password");
         request.getSession().removeAttribute("validationError");
         request.getSession().removeAttribute("error1");
+        String login = request.getParameter("email");
+        String password = request.getParameter("password");
 
 
         ConnectionPool connectionPool = (ConnectionPool) request.getServletContext().getAttribute("connectionPool");
         CustomerDAO customerDAO = new CustomerDAO(connectionPool);
         UserRoleDAO userRoleDAO = new UserRoleDAO(connectionPool);
         CardDAO cardDAO = new CardDAO(connectionPool);
-
         if (customerDAO.searchingByLoginAndPassword(login
                 , PasswordEncryption.encryptPasswordSha1(password))) {
 
             Customer customer = customerDAO.getCustomerByLogin(login);
             customer.setPassword(null);
             String userRole = userRoleDAO.showUserRoleById(customer.getUserID());
-
-            Card card = cardDAO.getCardById(customer.getUserID());
-
-
+            List <Card> cards = cardDAO.getCardByCustomerId(customer.getUserID());
             request.getSession().setAttribute("customerId", customer.getUserID());
             request.getSession().setAttribute("customer", customer);
-            request.getSession().setAttribute("card", card);
+
+            request.getSession().setAttribute("cards", cards);
             request.getSession().setAttribute("role", userRole);
             request.getSession().setAttribute("locale", "en");
 

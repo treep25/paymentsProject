@@ -15,8 +15,8 @@
     <div class="form" >
         <form action="ReplenishmentToCustomer" method="post" novalidate>
             <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label"><fmt:message key="customer.id"/></label>
-                <input type="number" class="input form-control id-input field" id="exampleInputEmail1" name="recipient" aria-describedby="emailHelp">
+                <label for="exampleInputEmail1" class="form-label"><fmt:message key="recipient.card"/></label>
+                <input type="text" class="input form-control id-input field" id="exampleInputEmail1" name="recipient" aria-describedby="emailHelp">
             </div>
             <div class="mb-3">
                 <label class="form-label"><fmt:message key="amount"/> </label>

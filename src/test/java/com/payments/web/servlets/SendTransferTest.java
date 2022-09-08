@@ -7,6 +7,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +18,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -27,6 +30,11 @@ class SendTransferTest {
     private final ConnectionPool connectionPool = new ConnectionPool(testURL);
     private final Connection con = connectionPool.getConnection();
     HttpSession session = mock(HttpSession.class);
+    private String numberOfSenderExisting ="9999 9999 9999 9999";
+    private String numberOfRecipientExisting = "9999 9999 9999 9991";
+    private String numberOfRecipientNotExisting ="1234 9999 99qw99 9999";
+    private int  userId =1;
+    private int  cardNumber =1;
     HttpServletRequest request = mock(HttpServletRequest.class);
     HttpServletResponse response = mock(HttpServletResponse.class);
     ServletContext servletContext = mock(ServletContext.class);
@@ -48,7 +56,7 @@ class SendTransferTest {
     }
 
     @Test
-    void doGetTestSendStatus() throws ServletException, IOException {
+    void doPostTestSendStatus() throws ServletException, IOException {
         when(request.getSession()).thenReturn(session);
         when(request.getServletContext()).thenReturn(servletContext);
 
@@ -57,34 +65,55 @@ class SendTransferTest {
 
         when(servletContext.getAttribute("connectionPool")).thenReturn(mockConnectionPool);
 
-        String emailRecipient ="testCardDao@1gmail.com";
         int amount = 100;
-        Card card = new Card();//TODO 3
+        int customerId = 1;
+        Card card = new Card();
+        card.setNumberOfCard(numberOfSenderExisting);
         card.setBalance(1000);
-        Customer customer = new Customer();
-        customer.setLogin("testCardDao@gmail.com");
-        customer.setUserID(1);
-        customer.setPhone("123-456-78-90");
-        customer.setFirstName("testCardDao");
-        customer.setSecondName("testCardDao");
+        List <Card> list = new LinkedList<>();
+        list.add(card);
 
-        when(request.getParameter("recipient")).thenReturn(emailRecipient);
+        when(request.getParameter("recipient")).thenReturn(numberOfRecipientExisting);
         when(request.getParameter("amount")).thenReturn(String.valueOf(amount));
-        when(session.getAttribute("card")).thenReturn(card);
-        when(session.getAttribute("customer")).thenReturn(customer);
+        when(session.getAttribute("customerId")).thenReturn(customerId);
+        when(session.getAttribute("cardNumber")).thenReturn(1);
+        when(session.getAttribute("cards")).thenReturn(list);
 
         sendTransfer.doPost(request,response);
 
-        verify(response).sendRedirect("http://localhost:8080/cards.jsp");
+        verify(response).sendRedirect("/cards.jsp");
 
     }
 
     @Test
-    void doGetTestErrorEmailExisting() {
+    void doPostTestErrorCardNumberExisting() throws ServletException, IOException {
+        when(request.getSession()).thenReturn(session);
+        when(request.getServletContext()).thenReturn(servletContext);
 
+        ConnectionPool mockConnectionPool = mock(ConnectionPool.class);
+        when(mockConnectionPool.getConnection()).thenReturn(con);
+
+        when(servletContext.getAttribute("connectionPool")).thenReturn(mockConnectionPool);
+
+        int amount = 100;
+        int customerId = 1;
+        Card card = new Card();
+        card.setNumberOfCard(numberOfSenderExisting);
+        card.setBalance(1000);
+        List <Card> list = new LinkedList<>();
+        list.add(card);
+        when(request.getParameter("recipient")).thenReturn(numberOfRecipientNotExisting);
+        when(request.getParameter("amount")).thenReturn(String.valueOf(amount));
+        when(session.getAttribute("customerId")).thenReturn(customerId);
+        when(session.getAttribute("cardNumber")).thenReturn(1);
+        when(session.getAttribute("cards")).thenReturn(list);
+
+        RequestDispatcher requestDispatcher = mock(RequestDispatcher.class);
+        when(request.getRequestDispatcher("send.jsp")).thenReturn(requestDispatcher);
+
+        sendTransfer.doPost(request,response);
+
+        verify(requestDispatcher).forward(request,response);
     }
 
-    @Test
-    void doGetTestPrepareStatus() {
-    }
 }

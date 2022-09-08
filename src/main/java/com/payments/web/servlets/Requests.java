@@ -17,7 +17,6 @@ import java.util.List;
 public class Requests extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         ConnectionPool connectionPool = (ConnectionPool) getServletContext().getAttribute("connectionPool");
         CustomerDAO customerDAO = new CustomerDAO(connectionPool);
         List<Customer> list;
@@ -26,8 +25,5 @@ public class Requests extends HttpServlet {
         response.sendRedirect("/requests.jsp");
     }
 
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-    }
 }

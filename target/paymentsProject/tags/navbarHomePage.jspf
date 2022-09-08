@@ -1,10 +1,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="com.payments.entety.Card" %>
+<%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <% if (request.getSession().getAttribute("role").equals("Customer") ){
-    Card card = (Card) request.getSession().getAttribute("card");
+    List<Card> cardSet = (List<Card>) request.getSession().getAttribute("cards");
 %>
 <link type="text/css" rel="stylesheet" href="css/er.css">
 <title>Account</title>
@@ -22,41 +23,13 @@
                 <li class="nav-item"><a class="nav-link active" aria-current="page" href="personalCustomerAccount.jsp"><fmt:message key="home"/></a></li>
                 <li class="nav-item"><a class="nav-link" href="aboutUs.jsp"><fmt:message key="about.us"/></a></li>
             </ul>
-            <%if(!card.getStatus().equals("Active")){%>
-            <a class="btn btn-primary m-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><fmt:message key="request"/></a>
-                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="staticBackdropLabel"><fmt:message key="making.request"/></h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <fmt:message key="you.can.make.one"/>
-                                <c:if test="${sessionScope.requestError != null} ">
-                                    <p class="er"><fmt:message key="${sessionScope.requestError}"/><p>
-                                </c:if>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><fmt:message key="close"/></button>
-                                <a class="btn btn-primary" href="MakeRequest"> <fmt:message key="request"/></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <%}%>
             <ul class="nav nav-tabs gx-md-5 col-md-1 ">
                 <li class="nav-item dropdown m-2 ">
                     <a class="btn btn-secondary dropdown-toggle " data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false"><fmt:message key="account"/></a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="accountInfo.jsp"><fmt:message key="account.info"/></a></li>
-                        <%if (!card.getStatus().equals("Active")) {%>
-                        <li><a class="dropdown-item disabled" href="#" tabindex="-1" aria-disabled="true"><fmt:message key="cards"/></a></li>
-                        <li><a class="dropdown-item disabled" href="#" tabindex="-1" aria-disabled="true"><fmt:message key="payments"/></a></li>
-                        <%} else {%>
                         <li><a class="dropdown-item" href="cards.jsp"><fmt:message key="cards"/></a></li>
                         <li><a class="dropdown-item" href="Pagination?page=1&records=5&sorting=1"><fmt:message key="payments"/></a></li>
-                        <%}%>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="LogOut" methods="doPost"><fmt:message key="log.out"/></a></li>
                     </ul>

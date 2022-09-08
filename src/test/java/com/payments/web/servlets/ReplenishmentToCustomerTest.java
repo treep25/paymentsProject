@@ -23,6 +23,8 @@ class ReplenishmentToCustomerTest {
     private final String testURL = "jdbc:mysql://127.0.0.1:3306/paymentsTest";
     private final ConnectionPool connectionPool = new ConnectionPool(testURL);
     private final Connection con = connectionPool.getConnection();
+    private String numberOfRecipientExisting ="9999 9999 9999 9999";
+    private String numberOfRecipientNotExisting ="1234 9999 99qw99 9999";
     HttpSession session = mock(HttpSession.class);
     HttpServletRequest request = mock(HttpServletRequest.class);
     HttpServletResponse response = mock(HttpServletResponse.class);
@@ -48,16 +50,16 @@ class ReplenishmentToCustomerTest {
 
         when(servletContext.getAttribute("connectionPool")).thenReturn(mockConnectionPool);
 
-        int amount = 1;
-        int recipientId= 2;
+        int amount = 1000;
+
 
         when(request.getParameter("amount")).thenReturn(String.valueOf(amount));
-        when(request.getParameter("recipient")).thenReturn(String.valueOf(recipientId));
+        when(request.getParameter("recipient")).thenReturn(String.valueOf(numberOfRecipientExisting));
 
         ReplenishmentToCustomer replenishmentToCustomer = new ReplenishmentToCustomer();
         replenishmentToCustomer.doPost(request,response);
 
-        verify(response).sendRedirect("http://localhost:8080/topUp.jsp");
+        verify(response).sendRedirect("/topUp.jsp");
 
     }
     @Test
@@ -71,11 +73,10 @@ class ReplenishmentToCustomerTest {
 
         when(servletContext.getAttribute("connectionPool")).thenReturn(mockConnectionPool);
 
-        int amount = -1;
-        int recipientId = 2;
+        int amount = 1000;
 
         when(request.getParameter("amount")).thenReturn(String.valueOf(amount));
-        when(request.getParameter("recipient")).thenReturn(String.valueOf(recipientId));
+        when(request.getParameter("recipient")).thenReturn(String.valueOf(numberOfRecipientNotExisting));
 
         RequestDispatcher requestDispatcher = mock(RequestDispatcher.class);
         when(request.getRequestDispatcher("topUp.jsp")).thenReturn(requestDispatcher);
@@ -95,11 +96,10 @@ class ReplenishmentToCustomerTest {
 
         when(servletContext.getAttribute("connectionPool")).thenReturn(mockConnectionPool);
 
-        int amount = 1;
-        int recipientId = 100;
+        int amount = -1000;
 
         when(request.getParameter("amount")).thenReturn(String.valueOf(amount));
-        when(request.getParameter("recipient")).thenReturn(String.valueOf(recipientId));
+        when(request.getParameter("recipient")).thenReturn(String.valueOf(numberOfRecipientExisting));
 
         RequestDispatcher requestDispatcher = mock(RequestDispatcher.class);
         when(request.getRequestDispatcher("topUp.jsp")).thenReturn(requestDispatcher);

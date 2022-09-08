@@ -1,13 +1,11 @@
 package com.payments.entety;
-import java.sql.Date;
-import java.sql.Timestamp;
 
 public class Payment {
 
     private int paymentId;
     private int userId;
-    private String emailSender;
-    private String emailRecipient;
+    private String cardNumberSender;
+    private String cardNumberRecipient;
     private Integer amount;
     private String date;
     private String paymentStatus;
@@ -15,8 +13,8 @@ public class Payment {
 
     public Payment(int userId, String emailSender, String emailRecipient, Integer amount, String date, String paymentStatus) {
         this.userId = userId;
-        this.emailSender = emailSender;
-        this.emailRecipient = emailRecipient;
+        this.cardNumberSender = emailSender;
+        this.cardNumberRecipient = emailRecipient;
         this.amount = amount;
         this.date = date;
         this.paymentStatus = paymentStatus;
@@ -26,28 +24,28 @@ public class Payment {
                    String emailRecipient, Integer amount, String date, String paymentStatus) {
         this.paymentId = paymentId;
         this.userId = userId;
-        this.emailSender = emailSender;
-        this.emailRecipient = emailRecipient;
+        this.cardNumberSender = emailSender;
+        this.cardNumberRecipient = emailRecipient;
         this.amount = amount;
         this.date = date;
         this.paymentStatus = paymentStatus;
     }
 
-    public String getEmailSender() {
-        return emailSender;
+    public String getCardNumberSender() {
+        return cardNumberSender;
     }
 
-    public Payment setEmailSender(String emailSender) {
-        this.emailSender = emailSender;
+    public Payment setCardNumberSender(String cardNumberSender) {
+        this.cardNumberSender = cardNumberSender;
         return this;
     }
 
-    public String getEmailRecipient() {
-        return emailRecipient;
+    public String getCardNumberRecipient() {
+        return cardNumberRecipient;
     }
 
-    public Payment setEmailRecipient(String emailRecipient) {
-        this.emailRecipient = emailRecipient;
+    public Payment setCardNumberRecipient(String cardNumberRecipient) {
+        this.cardNumberRecipient = cardNumberRecipient;
         return this;
     }
 
@@ -94,8 +92,8 @@ public class Payment {
 
     @Override
     public String toString() {
-        return  "Sender: " + emailSender +
-                " Recipient: " + emailRecipient +
+        return  "Sender: " + cardNumberSender +
+                " Recipient: " + cardNumberRecipient +
                 " Amount: " + amount +"$"+
                 " date: " + date +
                 " Status: " + paymentStatus;

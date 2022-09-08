@@ -24,7 +24,7 @@ class DeleteCustomerTest {
     private final ConnectionPool connectionPool = new ConnectionPool(testURL);
     private final Connection con = connectionPool.getConnection();
     private final int existingId = 1;
-    private final int notExistingId = 2;
+    private final int notExistingId = 123;
 
     HttpSession session = mock(HttpSession.class);
     HttpServletRequest request = mock(HttpServletRequest.class);
@@ -58,7 +58,7 @@ class DeleteCustomerTest {
         DeleteCustomer deleteCustomer = new DeleteCustomer();
         deleteCustomer.doPost(request,response);
 
-        verify(response).sendRedirect("http://localhost:8080/PaginationAllCustomers?records=5&page=1&sorting=1");
+        verify(response).sendRedirect("/PaginationAllCustomers?records=5&page=1&sorting=1");
 
     }
 

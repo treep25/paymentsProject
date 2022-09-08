@@ -26,8 +26,8 @@
 
     <c:forEach var="list" items="${sessionScope.paymentList}">
     <tr>
-        <td><c:out value="${list.getEmailSender()}"/></td>
-        <td><c:out value="${list.getEmailRecipient()}"/></td>
+        <td><c:out value="${list.getCardNumberSender()}"/></td>
+        <td><c:out value="${list.getCardNumberRecipient()}"/></td>
         <td><c:out value="${list.getAmount()}"/> ₴</td>
         <td><tag:date date="${list.getDate()}" locale="${sessionScope.locale}"/></td>
         <td><fmt:message key="${list.getPaymentStatus()}"/></td>
@@ -90,7 +90,7 @@
             <option value="10" >10 <fmt:message key="items"/></option>
             <option value="15">15 <fmt:message key="items"/></option>
         </select>
-        <label for="records1">Sorting</label>
+        <label for="records1"><fmt:message key="sorting"/></label>
         <select class="form-control" id="records1" name="sorting">
             <option value="1" ><fmt:message key="number"/> ></option>
             <option value="2" ><fmt:message key="number"/> <</option>

@@ -22,25 +22,18 @@ public class Pagination extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         int rows = 0;
         int sorting = Integer.parseInt(request.getParameter("sorting"));
         int customerId = (Integer) request.getSession().getAttribute("customerId");
         int currentPage = Integer.parseInt(request.getParameter("page"));
         int recordsPerPage = Integer.parseInt(request.getParameter("records"));
-
         ConnectionPool connectionPool = (ConnectionPool) request.getServletContext().getAttribute("connectionPool");
         PaymentDAO paymentDAO = new PaymentDAO(connectionPool);
-
         List<Payment> list;
         list = paymentDAO.getAllPaymentsByCustomerId(customerId,sorting,currentPage,recordsPerPage);
-
         request.getSession().setAttribute("paymentList",list);
-
         rows = paymentDAO.getNumberOfRows(customerId);
-
         int nOfPages = rows / recordsPerPage;
-
         if (nOfPages % recordsPerPage > 0) nOfPages++;
 
         request.getSession().setAttribute("sorting", sorting);

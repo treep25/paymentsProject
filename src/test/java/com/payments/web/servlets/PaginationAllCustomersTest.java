@@ -53,6 +53,6 @@ class PaginationAllCustomersTest {
         PaginationAllCustomers paginationAllCustomers = new PaginationAllCustomers();
         paginationAllCustomers.doGet(request,response);
 
-        verify(response).sendRedirect("http://localhost:8080/customers.jsp");
+        verify(response).sendRedirect("/customers.jsp");
     }
 }

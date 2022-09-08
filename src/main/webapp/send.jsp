@@ -13,13 +13,14 @@
 <fmt:setBundle basename="resource"/>
 <div class="d-grid gap-2 col-2 mx-auto m-4">
     <div class="container-fluid m-3 row gy-2">
-        <p class="fst-normal fs-3 "><fmt:message key="card.balance"/>: <c:out value="${sessionScope.card.getBalance()}"/> ₴</p>
+        <p class="fst-normal fs-3 "><fmt:message key="card.balance"/>:  <c:out value="${sessionScope.cards.get(sessionScope.cardNumber-1).getBalance()}"/> ₴</p>
+        <p class="fst-normal fs-5 "><c:out value="${sessionScope.cards.get(sessionScope.cardNumber-1).getNumberOfCard()}"/></p>
     </div>
     <div class="form" >
         <form action="SendTransfer" method="post" novalidate>
             <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label"><fmt:message key="recipient.email"/></label>
-                <input type="email" class="input form-control email-input field" id="exampleInputEmail1" name="recipient" aria-describedby="emailHelp">
+                <label for="exampleInputEmail1" class="form-label"><fmt:message key="recipient.card"/></label>
+                <input type="text" class="input form-control card-input field" id="exampleInputEmail1" name="recipient" aria-describedby="emailHelp">
             </div>
             <div class="mb-3">
                 <label class="form-label"><fmt:message key="amount"/> </label>

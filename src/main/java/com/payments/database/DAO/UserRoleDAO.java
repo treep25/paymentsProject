@@ -22,11 +22,9 @@ public class UserRoleDAO {
     public UserRoleDAO() {
 
     }
-
     public UserRoleDAO(ConnectionPool connectionPool) {
         this.con = connectionPool.getConnection();
     }
-
     public void SetCustomerRoleByID4Customer(int id) {
         try (PreparedStatement preparedStatement = con
                 .prepareStatement(INSERT_ROLE_USER)) {
@@ -38,7 +36,6 @@ public class UserRoleDAO {
             throw new RuntimeException(e);
         }
     }
-
     public void SetCustomerRoleByID4ADMIN(int id) {
         try (PreparedStatement preparedStatement = con
                 .prepareStatement(INSERT_ROLE_USER)) {
@@ -50,7 +47,6 @@ public class UserRoleDAO {
             throw new RuntimeException(e);
         }
     }
-
     public String showUserRoleById(int id) {
         String userRole = null;
         try (PreparedStatement preparedStatement = con

@@ -22,6 +22,7 @@ public class LogOut extends HttpServlet {
         request.getSession().removeAttribute("locale");
         request.getSession().removeAttribute("error");
         request.getSession().removeAttribute("error1");
+        request.getSession().removeAttribute("cardNumber");
         response.sendRedirect("/mainPage.jsp");
     }
 

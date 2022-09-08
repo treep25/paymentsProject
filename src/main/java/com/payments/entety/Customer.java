@@ -1,5 +1,7 @@
 package com.payments.entety;
 
+import java.util.List;
+
 public class Customer {
 
     private int userID;
@@ -9,8 +11,9 @@ public class Customer {
     private String password;
     private String phone;
     private String role ;
-
     private Integer balance;
+
+    private String cardNum ;
     private String statusOfCard;
 
 
@@ -38,6 +41,14 @@ public class Customer {
         this.login = login;
         this.password = password;
         this.phone = phone;
+    }
+
+    public String getCardNum() {
+        return cardNum;
+    }
+
+    public void setCardNum(String cardNum) {
+        this.cardNum = cardNum;
     }
 
     public String getStatusOfCard() {

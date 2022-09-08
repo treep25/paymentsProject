@@ -1,54 +1,60 @@
 package com.payments.database.DAO;
 
 import com.payments.database.ConnectionPool;
-import com.payments.entety.Customer;
+import com.payments.entety.Card;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito.*;
 
+import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
 
 class CardDAOTest {
-    private final ConnectionPool connectionPool = new ConnectionPool("jdbc:mysql://127.0.0.1:3306/paymentsTest");
+    private final String testURL = "jdbc:mysql://127.0.0.1:3306/paymentsTest";
+    private final ConnectionPool connectionPool = new ConnectionPool(testURL);
+    private final Connection con = connectionPool.getConnection();
     private final CardDAO cardDAO = new CardDAO(connectionPool);
+    private String cardNumberExisting = "9999 9999 9999 9999";
+    private String cardNumberNotExisting = "1234 1234 1234 1234";
+
+    @BeforeEach
+    public void beforeStart() throws SQLException {
+        con.setAutoCommit(false);
+    }
+    @AfterEach
+    public void afterStart() throws SQLException {
+        con.rollback();
+    }
 
     @Test
     void isCardExistTest() {
-        int someCardId = 322;
-        assertFalse(cardDAO.isCardExist(someCardId));
-    }
-    @Test
-    void isCardNotExistTest() {
-        int someCardId = 74;
-        assertTrue(cardDAO.isCardExist(someCardId));
+        assertTrue(cardDAO.isCardExist(cardNumberExisting));
+        assertFalse(cardDAO.isCardExist(cardNumberNotExisting));
     }
 
     @Test
-    void creatCardForCustomer() throws SQLException {
-        int testDaoId = 1;
-        cardDAO.creatCardForCustomer(testDaoId);
+    void setCardStatusTest() {
+        cardDAO.setCardStatus(cardNumberExisting,"Prepare");
     }
 
     @Test
-    void setCardStatus() {
-
+    void updateBalanceByCardNumberTest() {
+        assertTrue(cardDAO.updateBalanceByCardNumber(cardNumberExisting,1));
     }
 
-    @Test
-    void updateBalanceByCardId() {
-    }
 
     @Test
-    void getCardById() {
+    void creatCardTest() {
+        cardDAO.creatCard(1);
     }
 
-    @Test
-    void getCardIdByUserId() {
-    }
 
     @Test
-    void transferP2P() {
+    void getStatusOfCardTest() {
+        assertEquals("Active",cardDAO.getStatusOfCard(cardNumberExisting));
+        assertNull(cardDAO.getStatusOfCard(cardNumberNotExisting));
     }
 }

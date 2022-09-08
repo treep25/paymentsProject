@@ -15,6 +15,8 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.LinkedList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -24,7 +26,9 @@ class ReplenishmentTest {
     private final ConnectionPool connectionPool = new ConnectionPool(testURL);
     private final Connection con = connectionPool.getConnection();
     HttpSession session = mock(HttpSession.class);
-    private final Card existingCard = new Card();
+    private  Card card = new Card();
+    private int cardPos =1;
+    private final List<Card> list = new LinkedList<>();
     HttpServletRequest request = mock(HttpServletRequest.class);
     HttpServletResponse response = mock(HttpServletResponse.class);
     ServletContext servletContext = mock(ServletContext.class);
@@ -39,43 +43,54 @@ class ReplenishmentTest {
     }
 
     @Test
-    void doGetTestTrue() throws ServletException, IOException {
+    void doGet()throws ServletException, IOException{
         when(request.getSession()).thenReturn(session);
         when(request.getServletContext()).thenReturn(servletContext);
-
         ConnectionPool mockConnectionPool = mock(ConnectionPool.class);
         when(mockConnectionPool.getConnection()).thenReturn(con);
+        when(servletContext.getAttribute("connectionPool")).thenReturn(mockConnectionPool);
+        when(request.getParameter("card")).thenReturn(String.valueOf(cardPos));
 
+        Replenishment replenishment = new Replenishment();
+        replenishment.doGet(request,response);
+        verify(response).sendRedirect("/replenishment.jsp");
+    }
+    @Test
+    void doPostTestTrue() throws ServletException, IOException {
+        when(request.getSession()).thenReturn(session);
+        when(request.getServletContext()).thenReturn(servletContext);
+        ConnectionPool mockConnectionPool = mock(ConnectionPool.class);
+        when(mockConnectionPool.getConnection()).thenReturn(con);
         when(servletContext.getAttribute("connectionPool")).thenReturn(mockConnectionPool);
 
         int amount = 100;
-        existingCard.setCardId(74);
-        existingCard.setUserId(1);
+        card.setNumberOfCard("9999 9999 9999 9999");
+        list.add(card);
 
-        when(session.getAttribute("card")).thenReturn(existingCard);
+
+        when(session.getAttribute("cards")).thenReturn(list);
+        when(session.getAttribute("cardNumber")).thenReturn(cardPos);
         when(request.getParameter("amount")).thenReturn(String.valueOf(amount));
 
         Replenishment replenishment = new Replenishment();
         replenishment.doPost(request,response);
 
-        verify(response).sendRedirect("http://localhost:8080/cards.jsp");
+        verify(response).sendRedirect("/cards.jsp");
     }
 
     @Test
     void doGetTestErrorAmountLessZero() throws ServletException, IOException {
         when(request.getSession()).thenReturn(session);
         when(request.getServletContext()).thenReturn(servletContext);
-
         ConnectionPool mockConnectionPool = mock(ConnectionPool.class);
         when(mockConnectionPool.getConnection()).thenReturn(con);
-
         when(servletContext.getAttribute("connectionPool")).thenReturn(mockConnectionPool);
-
         int amount = -12;
-        existingCard.setCardId(74);
-        existingCard.setUserId(1);
+        card.setNumberOfCard("9999 9999 9999 9999");
+        list.add(card);
 
-        when(session.getAttribute("card")).thenReturn(existingCard);
+        when(session.getAttribute("cards")).thenReturn(list);
+        when(session.getAttribute("cardNumber")).thenReturn(cardPos);
         when(request.getParameter("amount")).thenReturn(String.valueOf(amount));
 
         RequestDispatcher requestDispatcher = mock(RequestDispatcher.class);

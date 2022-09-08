@@ -5,9 +5,7 @@ import com.payments.entety.Payment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.print.DocFlavor;
 import java.sql.*;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static com.payments.database.SqlQuery.Payment.*;
@@ -23,23 +21,16 @@ public class PaymentDAO {
     }
     public  PaymentDAO(ConnectionPool connectionPool){
         this.con = connectionPool.getConnection();
-
     }
-
     private String getSQL(int sorting){
         if(Objects.equals(sorting,1))return PAGINATION_ALL_PAYMENTS_EARLIER;
         else if (Objects.equals(sorting,2)) return PAGINATION_ALL_PAYMENTS_LATEST ;
         else if (Objects.equals(sorting,3)) return PAGINATION_ALL_PAYMENTS_BY_DATE_EARLIER;
         else return PAGINATION_ALL_PAYMENTS_BY_DATE_LATEST;
     }
-
-
     public List<Payment> getAllPaymentsByCustomerId(int id,int sorting,int currentPage, int recordsPerPage){
-
         List <Payment> paymentList= new LinkedList<>();
-
         int start = currentPage * recordsPerPage - recordsPerPage;
-
         try(PreparedStatement preparedStatement = con
                 .prepareStatement(getSQL(sorting))) {
             preparedStatement.setInt(1,id);
@@ -86,8 +77,8 @@ public class PaymentDAO {
                 .prepareStatement(INSERT_INTO_PAYMENTS_ALL)){
 
            preparedStatement.setInt(1,payment.getUserId());
-           preparedStatement.setString(2,payment.getEmailSender());
-           preparedStatement.setString(3,payment.getEmailRecipient());
+           preparedStatement.setString(2,payment.getCardNumberSender());
+           preparedStatement.setString(3,payment.getCardNumberRecipient());
            preparedStatement.setInt(4,payment.getAmount());
            preparedStatement.setTimestamp(5,Timestamp.valueOf(payment.getDate()));
            preparedStatement.setString(6,payment.getPaymentStatus());
@@ -96,7 +87,6 @@ public class PaymentDAO {
             log.error(e.getMessage());
             throw new RuntimeException(e);
         }
-
     }
 
 }

@@ -10,13 +10,13 @@
     <title>Replenishment</title>
 </head>
 <body>
-
 <fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="resource"/>
-
 <div class="d-grid gap-2 col-2 mx-auto m-4">
     <div class="container-fluid m-3 row gy-2">
-        <p class="fst-normal fs-3 "><fmt:message key="card.balance"/>: <c:out value="${sessionScope.card.getBalance()}"/> ₴</p>
+        <p class="fst-normal fs-3 "><fmt:message key="card.balance"/>: <c:out value="${sessionScope.cards.get(sessionScope.cardNumber-1).getBalance()}"/> ₴</p>
+        <p class="fst-normal fs-5 "><c:out value="${sessionScope.cards.get(sessionScope.cardNumber-1).getNumberOfCard()}"/></p>
+
     </div>
     <div class="form" >
         <form action="Replenishment" method="post" novalidate>

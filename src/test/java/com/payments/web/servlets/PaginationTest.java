@@ -54,7 +54,7 @@ class PaginationTest {
         Pagination pagination = new Pagination();
         pagination.doGet(request,response);
 
-        verify(response).sendRedirect("http://localhost:8080/payments.jsp");
+        verify(response).sendRedirect("/payments.jsp");
 
     }
 }

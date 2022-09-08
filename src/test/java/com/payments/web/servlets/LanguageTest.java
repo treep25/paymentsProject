@@ -51,7 +51,7 @@ class LanguageTest {
         Language language = new Language();
         language.doGet(request,response);
 
-        verify(response).sendRedirect("http://localhost:8080/personalCustomerAccount.jsp");
+        verify(response).sendRedirect("/personalCustomerAccount.jsp");
 
     }
 }

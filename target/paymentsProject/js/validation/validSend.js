@@ -1,16 +1,16 @@
 let form = document.querySelector('.form')
-let email = form.querySelector('.email-input')
+let card = form.querySelector('.card-input')
 let amount = form.querySelector('.amount-input')
 let fields = form.querySelectorAll('.field')
 
 
-function validateEmail(mail) {
-    let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(String(mail).toLowerCase());
+function validateCardNumber(cardNum) {
+    let re = /^[0-9]{4}[\d]{1}[0-9]{4}[\d]{1}[0-9]{4}[\d]{1}[0-9]{4}[\d]{1}$/;
+    return re.test(String(cardNum).toLowerCase());
 }
 
 form.onsubmit = function () {
-    let emailValue = email.value,
+    let cardValue = card.value,
         emptyInputs = Array.from(fields).filter(input => input.value === '');
 
     fields.forEach(function (input) {
@@ -26,7 +26,7 @@ form.onsubmit = function () {
         fields.item(1).value
         return false;
     }
-    if(!validateEmail(emailValue)) {
+    if(!validateCardNumber(cardValue)) {
         console.log('email not valid');
         email.classList.add('error');
         return false;

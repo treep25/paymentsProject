@@ -57,7 +57,7 @@ class ForgotPassTest {
         ForgotPass forgotPass = new ForgotPass();
         forgotPass.doPost(request,response);
 
-        verify(response).sendRedirect("http://localhost:8080/signUp.jsp");
+        verify(response).sendRedirect("/signUp.jsp");
 
     }
     @Test

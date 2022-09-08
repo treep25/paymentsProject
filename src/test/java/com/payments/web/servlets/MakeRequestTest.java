@@ -14,6 +14,8 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.LinkedList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -23,7 +25,9 @@ class MakeRequestTest {
     private final ConnectionPool connectionPool = new ConnectionPool(testURL);
     private final Connection con = connectionPool.getConnection();
 
-    private final Card existingCard = new Card();
+    private  Card card = new Card();
+    private final List<Card> list = new LinkedList<>();
+    private int cardPos =1;
     HttpSession session = mock(HttpSession.class);
     HttpServletRequest request = mock(HttpServletRequest.class);
     HttpServletResponse response = mock(HttpServletResponse.class);
@@ -48,15 +52,15 @@ class MakeRequestTest {
 
         when(servletContext.getAttribute("connectionPool")).thenReturn(mockConnectionPool);
 
-        existingCard.setCardId(74);
-        existingCard.setUserId(1);
+        card.setNumberOfCard("9999 9999 9999 9999");
+        list.add(card);
 
-        when(session.getAttribute("card")).thenReturn(existingCard);
-
+        when(request.getParameter("card")).thenReturn(String.valueOf(cardPos));
+        when(session.getAttribute("cards")).thenReturn(list);
         MakeRequest makeRequest = new MakeRequest();
         makeRequest.doGet(request,response);
 
-        verify(response).sendRedirect("http://localhost:8080/personalCustomerAccount.jsp");
+        verify(response).sendRedirect("/cards.jsp");
 
 
     }

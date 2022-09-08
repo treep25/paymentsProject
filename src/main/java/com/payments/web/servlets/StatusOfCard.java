@@ -13,24 +13,22 @@ import java.sql.SQLException;
 @WebServlet(name = "StatusOfCard", value = "/StatusOfCard")
 public class StatusOfCard extends HttpServlet {
 
-    private int customerId;
+    private String numberOfCard;
     private String status;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         status = request.getParameter("status");
-        customerId = Integer.parseInt(request.getParameter("id"));
+        numberOfCard = (request.getParameter("id"));
         doPost(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ConnectionPool connectionPool = (ConnectionPool) request.getServletContext().getAttribute("connectionPool");
-
         CardDAO cardDAO = new CardDAO(connectionPool);
-        Card card = cardDAO.getCardById(customerId);
-        cardDAO.setCardStatus(card.getCardId(), status);
-
+        cardDAO.setCardStatus(numberOfCard, status);
         request.getRequestDispatcher("PaginationAllCustomers?records=5&page=1&sorting=1").forward(request, response);
-    }
+        }
+
 }

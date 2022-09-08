@@ -3,6 +3,7 @@ package com.payments.web.servlets;
 import com.payments.database.ConnectionPool;
 import com.payments.database.DAO.CustomerDAO;
 import com.payments.database.DAO.PaymentDAO;
+import com.payments.entety.Card;
 import com.payments.entety.Customer;
 import com.payments.entety.Payment;
 
@@ -24,18 +25,13 @@ public class PaginationAllCustomers extends HttpServlet {
         int sorting = Integer.parseInt(request.getParameter("sorting"));
         int currentPage = Integer.parseInt(request.getParameter("page"));
         int recordsPerPage = Integer.parseInt(request.getParameter("records"));
-
         ConnectionPool connectionPool = (ConnectionPool) request.getServletContext().getAttribute("connectionPool");
         CustomerDAO customerDAO = new CustomerDAO(connectionPool);
-
         List<Customer> list;
         list = customerDAO.getAllCustomers(sorting, currentPage, recordsPerPage);
         request.getSession().setAttribute("listOfCustomers", list);
-
         rows = customerDAO.getNumberOfRows();
-
         int nOfPages = rows / recordsPerPage;
-
         if (nOfPages % recordsPerPage > 0) nOfPages++;
 
         request.getSession().setAttribute("sorting", sorting);
