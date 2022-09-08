@@ -9,6 +9,7 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
 @WebServlet(name = "StatusOfCard", value = "/StatusOfCard")
 public class StatusOfCard extends HttpServlet {
@@ -25,10 +26,19 @@ public class StatusOfCard extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String role = (String) request.getSession().getAttribute("role");
         ConnectionPool connectionPool = (ConnectionPool) request.getServletContext().getAttribute("connectionPool");
         CardDAO cardDAO = new CardDAO(connectionPool);
-        cardDAO.setCardStatus(numberOfCard, status);
-        request.getRequestDispatcher("PaginationAllCustomers?records=5&page=1&sorting=1").forward(request, response);
+        if (role.equals("Admin")){
+            cardDAO.setCardStatus(numberOfCard, status);
+            request.getRequestDispatcher("PaginationAllCustomers?records=5&page=1&sorting=1").forward(request, response);
+        }else{
+            cardDAO.setCardStatus(numberOfCard, status);
+            List<Card> cards = cardDAO.getCardByCustomerId(cardDAO.getCustomerIdByCustomerCardNumber(numberOfCard));
+            request.getSession().setAttribute("cards", cards);
+            response.sendRedirect("/accountInfo.jsp");
         }
+
+    }
 
 }

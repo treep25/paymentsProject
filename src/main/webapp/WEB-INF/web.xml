@@ -39,7 +39,6 @@
         <url-pattern>/ReplenishmentToCustomer</url-pattern>
         <url-pattern>/DeleteCustomers</url-pattern>
         <url-pattern>/Request</url-pattern>
-        <url-pattern>/StatusOfCard</url-pattern>
         <url-pattern>/customers.jsp</url-pattern>
         <url-pattern>/removeCustomer.jsp</url-pattern>
         <url-pattern>/request.jsp</url-pattern>

@@ -32,5 +32,6 @@ public class MakeRequest extends HttpServlet {
         request.getSession().setAttribute("cards",cards);
         request.getSession().setAttribute("requestError","requeest.error");
         response.sendRedirect("/cards.jsp");
+
     }
 }

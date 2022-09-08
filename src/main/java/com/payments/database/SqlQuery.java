@@ -37,6 +37,7 @@ public abstract class SqlQuery {
         public static final String IS_CARD_EXIST ="SELECT * FROM cards WHERE card_number=?" ;
         public static final String UPDATE_BALANCE_BY_CARD_NUMBER ="UPDATE cards SET balance = balance + ? WHERE card_number =?" ;
         public static final String GET_CARD_STATUS ="SELECT Status FROM cards WHERE card_number = ?" ;
+        public static final String GET_CUS_ID_BY_CARD_NUMBER ="SELECT user_id FROM cards WHERE card_number = ?" ;
 
     }
     public static class Payment {

@@ -138,5 +138,19 @@ public class CardDAO {
         }
         return  status;
     }
+    public int getCustomerIdByCustomerCardNumber (String cardNumber){
+        int customerId = 0;
+        try (PreparedStatement preparedStatement = con
+                .prepareStatement(GET_CUS_ID_BY_CARD_NUMBER)) {
+            preparedStatement.setString(1,cardNumber);
+            preparedStatement.execute();
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){customerId = resultSet.getInt(1);}
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return customerId;
+    }
+
 
 }
