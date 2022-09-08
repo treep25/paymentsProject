@@ -9,6 +9,6 @@
 </head>
 <body>
 <h2>Exception occurred while processing the request</h2>
-<p>Type: <%= exception%></p>
+<p>Go beak</p>
 </body>
 </html>
