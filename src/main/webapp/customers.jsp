@@ -42,7 +42,7 @@
             <c:if test="${list.getStatusOfCard() eq 'Blocked'}">
                 <td><a class="btn btn-danger" href="StatusOfCard?status=Active&id=${list.getCardNum()}"><fmt:message key="Blocked"/></a></td>
             </c:if>
-            <c:if test="${list.getStatusOfCard() != 'Blocked'}">
+            <c:if test="${list.getStatusOfCard() ne 'Blocked'}">
             <td><a class="btn btn-success " href="StatusOfCard?status=Blocked&id=${list.getCardNum()}"><fmt:message key="Active"/></a></td>
             </c:if>
         </tr>

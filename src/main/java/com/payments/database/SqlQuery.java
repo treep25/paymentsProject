@@ -26,7 +26,7 @@ public abstract class SqlQuery {
         public static final String IS_EXIST_BY_ID = "SELECT * FROM customer WHERE user_id=?";
         public static final String REMOVE_CUSTOMER = "DELETE FROM customer WHERE user_id = ?";
         public static final String SET_PASSWORD = "UPDATE customer SET password = ? WHERE login = ?";
-        public static final String COUNT_NUM_OF_ROWS = "SELECT COUNT(cards.card_id) FROM cards,user_role WHERE cards.user_id = user_role.user_id AND user_role.user_role = 'Customer'";
+        public static final String COUNT_NUM_OF_ROWS = "SELECT COUNT(cards.card_id) FROM cards,user_role WHERE cards.user_id = user_role.user_id AND user_role.user_role = 'Customer' AND cards.Status != 'Prepare'";
     }
     public static class Card {
         public static final String UPDATE_CARD_SET_BALANCE_SENDER = "UPDATE cards SET balance = balance - ? WHERE card_number =?";

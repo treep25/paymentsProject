@@ -36,8 +36,8 @@
                         <div class=" fs-5">
                             <fmt:message key="Blocked"/>
                         </div>
-                        <a class="btn btn-warning " data-bs-toggle="modal" data-bs-target="#staticBackdrop"><fmt:message key="request"/></a>
-                        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <a class="btn btn-warning " data-bs-toggle="modal" data-bs-target="#staticBackdrop${(sessionScope.cards.indexOf(card))+1}"><fmt:message key="request"/></a>
+                        <div class="modal fade" id="staticBackdrop${(sessionScope.cards.indexOf(card))+1}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -52,7 +52,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><fmt:message key="close"/></button>
-                                        <a class="btn btn-primary" href="MakeRequest?card=${sessionScope.cards.indexOf(card)+1}"> <fmt:message key="request"/></a>
+                                        <a class="btn btn-primary" href="MakeRequest?card=${(sessionScope.cards.indexOf(card))+1}"> <fmt:message key="request"/></a>
                                     </div>
                                 </div>
                             </div>
