@@ -18,6 +18,7 @@ import java.util.List;
 
 @WebServlet(name = "PaginationAllCustomers", value = "/PaginationAllCustomers")
 public class PaginationAllCustomers extends HttpServlet {
+    private CustomerDAO customerDAO;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -26,7 +27,7 @@ public class PaginationAllCustomers extends HttpServlet {
         int currentPage = Integer.parseInt(request.getParameter("page"));
         int recordsPerPage = Integer.parseInt(request.getParameter("records"));
         ConnectionPool connectionPool = (ConnectionPool) request.getServletContext().getAttribute("connectionPool");
-        CustomerDAO customerDAO = new CustomerDAO(connectionPool);
+        customerDAO = new CustomerDAO(connectionPool);
         List<Customer> list;
         list = customerDAO.getAllCustomers(sorting, currentPage, recordsPerPage);
         request.getSession().setAttribute("listOfCustomers", list);

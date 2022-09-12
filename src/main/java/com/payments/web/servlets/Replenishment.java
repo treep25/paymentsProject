@@ -2,6 +2,7 @@ package com.payments.web.servlets;
 
 import com.payments.database.ConnectionPool;
 import com.payments.database.DAO.CardDAO;
+import com.payments.database.DAO.CustomerDAO;
 import com.payments.entety.Card;
 
 import javax.servlet.*;
@@ -12,6 +13,8 @@ import java.util.List;
 
 @WebServlet(name = "Replenishment", value = "/Replenishment")
 public class Replenishment extends HttpServlet {
+    private CardDAO cardDAO;
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int cardNumber = Integer.parseInt(request.getParameter("card"));
@@ -26,7 +29,7 @@ public class Replenishment extends HttpServlet {
         int amount = Integer.parseInt(request.getParameter("amount"));
 
         ConnectionPool connectionPool = (ConnectionPool) request.getServletContext().getAttribute("connectionPool");
-        CardDAO cardDAO = new CardDAO(connectionPool);
+        cardDAO = new CardDAO(connectionPool);
 
         if (amount > 0) {
             if(cardDAO.updateBalanceByCardNumber(cardList.get(cardNumber-1).getNumberOfCard(),amount)){

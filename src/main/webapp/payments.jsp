@@ -31,8 +31,6 @@
         <td><c:out value="${list.getAmount()}"/> ₴</td>
         <td><tag:date date="${list.getDate()}" locale="${sessionScope.locale}"/></td>
         <td><fmt:message key="${list.getPaymentStatus()}"/></td>
-
-
     </tr>
     </c:forEach>
     </tbody>

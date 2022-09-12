@@ -1,6 +1,7 @@
 package com.payments.web.servlets;
 
 import com.payments.database.ConnectionPool;
+import com.payments.database.DAO.CustomerDAO;
 import com.payments.database.DAO.PaymentDAO;
 import com.payments.entety.Payment;
 
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 
 @WebServlet(name = "Pagination", value = "/Pagination")
 public class Pagination extends HttpServlet {
-
+    private PaymentDAO paymentDAO;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -28,7 +29,7 @@ public class Pagination extends HttpServlet {
         int currentPage = Integer.parseInt(request.getParameter("page"));
         int recordsPerPage = Integer.parseInt(request.getParameter("records"));
         ConnectionPool connectionPool = (ConnectionPool) request.getServletContext().getAttribute("connectionPool");
-        PaymentDAO paymentDAO = new PaymentDAO(connectionPool);
+        paymentDAO = new PaymentDAO(connectionPool);
         List<Payment> list;
         list = paymentDAO.getAllPaymentsByCustomerId(customerId,sorting,currentPage,recordsPerPage);
         request.getSession().setAttribute("paymentList",list);

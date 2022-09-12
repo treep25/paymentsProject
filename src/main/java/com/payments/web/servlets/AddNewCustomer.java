@@ -22,7 +22,9 @@ import static com.payments.services.ValidationForms.validateCustomer;
 
 @WebServlet(name = "AddNewCustomer", value = "/AddNewCustomer")
 public class AddNewCustomer extends HttpServlet {
-
+    private CustomerDAO customerDAO;
+    private CardDAO cardDAO;
+    private UserRoleDAO userRoleDAO;
     private static final Logger log = LoggerFactory.getLogger(AddNewCustomer.class);
 
     @Override
@@ -37,9 +39,9 @@ public class AddNewCustomer extends HttpServlet {
 
 
         ConnectionPool connectionPool = (ConnectionPool) request.getServletContext().getAttribute("connectionPool");
-        CustomerDAO customerDAO = new CustomerDAO(connectionPool);
-        CardDAO cardDAO = new CardDAO(connectionPool);
-        UserRoleDAO userRoleDAO = new UserRoleDAO(connectionPool);
+        customerDAO = new CustomerDAO(connectionPool);
+        cardDAO = new CardDAO(connectionPool);
+        userRoleDAO = new UserRoleDAO(connectionPool);
 
         Customer customer = new Customer(request.getParameter("name"),
                 request.getParameter("secName"),

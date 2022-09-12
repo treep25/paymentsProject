@@ -14,13 +14,14 @@ import java.sql.SQLException;
 @WebServlet(name = "ForgotPass", value = "/ForgotPass")
 public class ForgotPass extends HttpServlet {
 
+    private CustomerDAO customerDAO;
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.getSession().removeAttribute("errorForgotPass");
         String login = request.getParameter("email");
         String password = request.getParameter("password");
         ConnectionPool connectionPool = (ConnectionPool) request.getServletContext().getAttribute("connectionPool");
-        CustomerDAO customerDAO = new CustomerDAO(connectionPool);
+        customerDAO = new CustomerDAO(connectionPool);
         if(customerDAO.searchingByLogin(login)){
             customerDAO.setPassword(login,password);
             response.sendRedirect("/signUp.jsp");

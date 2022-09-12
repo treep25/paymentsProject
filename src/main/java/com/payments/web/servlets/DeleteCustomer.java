@@ -13,12 +13,14 @@ import java.sql.SQLException;
 @WebServlet(name = "DeleteCustomer", value = "/DeleteCustomer")
 public class DeleteCustomer extends HttpServlet {
 
+    private CustomerDAO customerDAO;
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.getSession().removeAttribute("warning");
 
         ConnectionPool connectionPool = (ConnectionPool) request.getServletContext().getAttribute("connectionPool");
-        CustomerDAO customerDAO = new CustomerDAO(connectionPool);
+        customerDAO = new CustomerDAO(connectionPool);
 
         int id = Integer.parseInt(request.getParameter("id"));
         if(customerDAO.isExist(id) && !request.getSession().getAttribute("customerId").equals(id)){

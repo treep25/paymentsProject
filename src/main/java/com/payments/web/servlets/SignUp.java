@@ -22,6 +22,9 @@ import java.util.Set;
 @WebServlet(name = "SignUp", value = "/SignUp")
 public class SignUp extends HttpServlet {
 
+    private CustomerDAO customerDAO;
+    private CardDAO cardDAO;
+    private UserRoleDAO userRoleDAO;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -35,12 +38,10 @@ public class SignUp extends HttpServlet {
         request.getSession().removeAttribute("error1");
         String login = request.getParameter("email");
         String password = request.getParameter("password");
-
-
         ConnectionPool connectionPool = (ConnectionPool) request.getServletContext().getAttribute("connectionPool");
-        CustomerDAO customerDAO = new CustomerDAO(connectionPool);
-        UserRoleDAO userRoleDAO = new UserRoleDAO(connectionPool);
-        CardDAO cardDAO = new CardDAO(connectionPool);
+        customerDAO = new CustomerDAO(connectionPool);
+        userRoleDAO = new UserRoleDAO(connectionPool);
+        cardDAO = new CardDAO(connectionPool);
         if (customerDAO.searchingByLoginAndPassword(login
                 , PasswordEncryption.encryptPasswordSha1(password))) {
 
@@ -56,7 +57,6 @@ public class SignUp extends HttpServlet {
             request.getSession().setAttribute("locale", "en");
 
             response.sendRedirect("/personalCustomerAccount.jsp");
-
         } else {
             request.getSession().setAttribute("error1", "incorrect.login.or.pass");
             request.getRequestDispatcher("signUp.jsp").forward(request, response);

@@ -12,6 +12,9 @@ import java.util.List;
 
 @WebServlet(name = "AddCard", value = "/AddCard")
 public class AddCard extends HttpServlet {
+    private CardDAO cardDAO;
+
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doPost(request,response);
@@ -19,13 +22,12 @@ public class AddCard extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Card> cards ;
         ConnectionPool connectionPool = (ConnectionPool) request.getServletContext().getAttribute("connectionPool");
         int currentId = (int) request.getSession().getAttribute("customerId");
-        CardDAO cardDAO = new CardDAO(connectionPool);
+        cardDAO = new CardDAO(connectionPool);
         cardDAO.creatCard(currentId);
-        cards = cardDAO.getCardByCustomerId(currentId);
-        request.getSession().setAttribute("cards",cards);
+        List<Card> cards = cardDAO.getCardByCustomerId(currentId);
+        request.getSession().setAttribute("cards", cards);
 
         response.sendRedirect("/cards.jsp");
     }

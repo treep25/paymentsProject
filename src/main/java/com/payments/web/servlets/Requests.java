@@ -15,15 +15,15 @@ import java.util.List;
 
 @WebServlet(name = "Requests", value = "/Requests")
 public class Requests extends HttpServlet {
+
+    private CustomerDAO customerDAO;
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ConnectionPool connectionPool = (ConnectionPool) getServletContext().getAttribute("connectionPool");
-        CustomerDAO customerDAO = new CustomerDAO(connectionPool);
-        List<Customer> list;
-        list = customerDAO.getAllCustomerWhereCardStatusPrepare();
+        customerDAO = new CustomerDAO(connectionPool);
+        List<Customer> list = customerDAO.getAllCustomerWhereCardStatusPrepare();
         request.getSession().setAttribute("requestList",list);
         response.sendRedirect("/requests.jsp");
     }
-
-
 }

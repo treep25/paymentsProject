@@ -24,14 +24,13 @@ import java.util.Set;
 public class SendTransfer extends HttpServlet {
 
     private static final Logger log = LoggerFactory.getLogger(SendTransfer.class);
-
+    private  CardDAO cardDAO ;
+    private  PaymentDAO paymentDAO;
     public String getDate() {
         Date date = new Date();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         return simpleDateFormat.format(date);
     }
-
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int cardNumber = Integer.parseInt(request.getParameter("card"));
@@ -49,12 +48,14 @@ public class SendTransfer extends HttpServlet {
         int cardNumber = (int) request.getSession().getAttribute("cardNumber");
         List<Card> cardList = (List<Card>) request.getSession().getAttribute("cards");
         ConnectionPool connectionPool = (ConnectionPool) request.getServletContext().getAttribute("connectionPool");
-        CardDAO cardDAO= new CardDAO(connectionPool);
-        PaymentDAO paymentDAO = new PaymentDAO(connectionPool);
+        cardDAO= new CardDAO(connectionPool);
+        paymentDAO = new PaymentDAO(connectionPool);
         Card card = cardList.get(cardNumber-1);
 
-        if(!cardNumberRecipient.isEmpty() &&  cardDAO.isCardExist(cardNumberRecipient) && cardDAO.getStatusOfCard(cardNumberRecipient).equals("Active") && amount>0
-                && card.getBalance()>amount && !cardNumberRecipient.equals(card.getNumberOfCard())){
+        if(!cardNumberRecipient.isEmpty() &&  cardDAO.isCardExist(cardNumberRecipient) && cardDAO.getStatusOfCard(cardNumberRecipient).equals("Active")
+                && amount>0 && card.getBalance()>=amount
+                && !cardNumberRecipient.equals(card.getNumberOfCard())){
+
             Payment payment = new Payment(idCustomer,card.getNumberOfCard(),
                     cardNumberRecipient,amount,getDate(),"Prepared");
             try {
@@ -65,6 +66,7 @@ public class SendTransfer extends HttpServlet {
                     paymentDAO.addPayment(payment);
                 }
             } catch (SQLException e) {
+                log.error(e.getMessage());
                 throw new RuntimeException(e);
             }
             for (Card c:
