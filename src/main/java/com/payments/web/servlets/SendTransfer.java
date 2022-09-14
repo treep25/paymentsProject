@@ -24,17 +24,19 @@ import java.util.Set;
 public class SendTransfer extends HttpServlet {
 
     private static final Logger log = LoggerFactory.getLogger(SendTransfer.class);
-    private  CardDAO cardDAO ;
-    private  PaymentDAO paymentDAO;
+    private CardDAO cardDAO;
+    private PaymentDAO paymentDAO;
+
     public String getDate() {
         Date date = new Date();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         return simpleDateFormat.format(date);
     }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int cardNumber = Integer.parseInt(request.getParameter("card"));
-        request.getSession().setAttribute("cardNumber",cardNumber);
+        request.getSession().setAttribute("cardNumber", cardNumber);
 
         response.sendRedirect("/send.jsp");
     }
@@ -48,20 +50,20 @@ public class SendTransfer extends HttpServlet {
         int cardNumber = (int) request.getSession().getAttribute("cardNumber");
         List<Card> cardList = (List<Card>) request.getSession().getAttribute("cards");
         ConnectionPool connectionPool = (ConnectionPool) request.getServletContext().getAttribute("connectionPool");
-        cardDAO= new CardDAO(connectionPool);
+        cardDAO = new CardDAO(connectionPool);
         paymentDAO = new PaymentDAO(connectionPool);
-        Card card = cardList.get(cardNumber-1);
+        Card card = cardList.get(cardNumber - 1);
 
-        if(!cardNumberRecipient.isEmpty() &&  cardDAO.isCardExist(cardNumberRecipient) && cardDAO.getStatusOfCard(cardNumberRecipient).equals("Active")
-                && amount>0 && card.getBalance()>=amount
-                && !cardNumberRecipient.equals(card.getNumberOfCard())){
+        if (!cardNumberRecipient.isEmpty() && cardDAO.isCardExist(cardNumberRecipient) && cardDAO.getStatusOfCard(cardNumberRecipient).equals("Active")
+                && amount > 0 && card.getBalance() >= amount
+                && !cardNumberRecipient.equals(card.getNumberOfCard())) {
 
-            Payment payment = new Payment(idCustomer,card.getNumberOfCard(),
-                    cardNumberRecipient,amount,getDate(),"Prepared");
+            Payment payment = new Payment(idCustomer, card.getNumberOfCard(),
+                    cardNumberRecipient, amount, getDate(), "Prepared");
             try {
-                if(!cardDAO.transferP2P(card.getNumberOfCard(),cardNumberRecipient, amount)){
+                if (!cardDAO.transferP2P(card.getNumberOfCard(), cardNumberRecipient, amount)) {
                     paymentDAO.addPayment(payment);
-                }else{
+                } else {
                     payment.setPaymentStatus("Send");
                     paymentDAO.addPayment(payment);
                 }
@@ -69,18 +71,17 @@ public class SendTransfer extends HttpServlet {
                 log.error(e.getMessage());
                 throw new RuntimeException(e);
             }
-            for (Card c:
-                 cardList) {
-                if (c.getNumberOfCard().equals(cardNumberRecipient))c.setBalance(c.getBalance()+amount);
+            for (Card c :
+                    cardList) {
+                if (c.getNumberOfCard().equals(cardNumberRecipient)) c.setBalance(c.getBalance() + amount);
             }
-            card.setBalance(card.getBalance()-amount);
-            cardList.set(cardNumber-1,card);
-            request.getSession().setAttribute("cards",cardList);
+            card.setBalance(card.getBalance() - amount);
+            cardList.set(cardNumber - 1, card);
+            request.getSession().setAttribute("cards", cardList);
             response.sendRedirect("/cards.jsp");
-        }
-        else {
-            request.getSession().setAttribute("warning","email.has`t.existed.or.You.haven`t.enough.money");
-            request.getRequestDispatcher("send.jsp").forward(request,response);
+        } else {
+            request.getSession().setAttribute("warning", "email.has`t.existed.or.You.haven`t.enough.money");
+            request.getRequestDispatcher("send.jsp").forward(request, response);
         }
 
     }

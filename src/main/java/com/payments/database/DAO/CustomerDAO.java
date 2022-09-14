@@ -91,7 +91,7 @@ public class CustomerDAO {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()){
-                if(!resultSet.getString(9).equals("Admin") && resultSet.getString(8)!= "Prepare"){
+                if(!resultSet.getString(9).equals("Admin")){
                     Customer customer = new Customer();
 
                     customer.setUserID(resultSet.getInt(1));

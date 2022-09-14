@@ -10,17 +10,17 @@ public abstract class SqlQuery {
         public static final String SELECT_CUSTOMER_PHONE = "SELECT phone FROM customer";
         public static final String SELECT_CUSTOMER_LOGIN_Id = "SELECT login, user_id FROM customer";
         public static final String PAGINATION_ALL_CUSTOMERS_BY_ID_EARLIER = "SELECT customer.user_id,customer.first_name,customer.second_name,customer.login,customer.phone,cards.card_number,cards.balance,cards.Status,user_role.user_role\n" +
-                "FROM customer,cards,user_role WHERE customer.user_id =cards.user_id AND customer.user_id=user_role.user_id ORDER BY user_id DESC  LIMIT ?, ? ";
-        public static final String PAGINATION_ALL_CUSTOMERS_BY_ID_LATEST = "SELECT customer.user_id,customer.first_name,customer.second_name,customer.login,customer.phone,cards.card_number,cards.balance,cards.Status,user_role.user_role\\n\" +\n" +
-                "                \"FROM customer,cards,user_role WHERE customer.user_id =cards.user_id AND customer.user_id=user_role.user_id ORDER BY user_id   LIMIT ?, ? ";
+                "FROM customer,cards,user_role WHERE customer.user_id =cards.user_id AND customer.user_id=user_role.user_id AND cards.Status != 'Prepare' ORDER BY user_id DESC  LIMIT ?, ? ";
+        public static final String PAGINATION_ALL_CUSTOMERS_BY_ID_LATEST = "SELECT customer.user_id,customer.first_name,customer.second_name,customer.login,customer.phone,cards.card_number,cards.balance,cards.Status,user_role.user_role\n" +
+                "FROM customer,cards,user_role WHERE customer.user_id =cards.user_id AND customer.user_id=user_role.user_id AND cards.Status != 'Prepare' ORDER BY user_id   LIMIT ?, ? ";
         public static final String PAGINATION_ALL_CUSTOMERS_BY_NAME_EARLIER = "SELECT customer.user_id,customer.first_name,customer.second_name,customer.login,customer.phone,cards.card_number,cards.balance,cards.Status,user_role.user_role\n" +
-                "FROM customer,cards,user_role WHERE customer.user_id =cards.user_id AND customer.user_id=user_role.user_id ORDER BY CHAR_LENGTH(first_name)  DESC  LIMIT ?, ?";
+                "FROM customer,cards,user_role WHERE customer.user_id =cards.user_id AND customer.user_id=user_role.user_id AND cards.Status != 'Prepare' ORDER BY CHAR_LENGTH(first_name)  DESC  LIMIT ?, ?";
         public static final String PAGINATION_ALL_CUSTOMERS_BY_NAME_LATEST = "SELECT customer.user_id,customer.first_name,customer.second_name,customer.login,customer.phone,cards.card_number,cards.balance,cards.Status,user_role.user_role\n" +
-                "FROM customer,cards,user_role WHERE customer.user_id =cards.user_id AND customer.user_id=user_role.user_id ORDER BY CHAR_LENGTH(first_name)  LIMIT ?, ?";
+                "FROM customer,cards,user_role WHERE customer.user_id =cards.user_id AND customer.user_id=user_role.user_id AND cards.Status != 'Prepare' ORDER BY CHAR_LENGTH(first_name)  LIMIT ?, ?";
         public static final String PAGINATION_ALL_CUSTOMERS_BY_AMOUNT_EARLIER = "SELECT customer.user_id,customer.first_name,customer.second_name,customer.login,customer.phone,cards.card_number,cards.balance,cards.Status,user_role.user_role\n" +
-                "FROM customer,cards,user_role WHERE customer.user_id =cards.user_id AND customer.user_id=user_role.user_id ORDER BY cards.balance DESC LIMIT ?, ?";
+                "FROM customer,cards,user_role WHERE customer.user_id =cards.user_id AND customer.user_id=user_role.user_id AND cards.Status != 'Prepare' ORDER BY cards.balance DESC LIMIT ?, ?";
         public static final String PAGINATION_ALL_CUSTOMERS_BY_AMOUNT_LATEST = "SELECT customer.user_id,customer.first_name,customer.second_name,customer.login,customer.phone,cards.card_number,cards.balance,cards.Status,user_role.user_role\n" +
-                "FROM customer,cards,user_role WHERE customer.user_id =cards.user_id AND customer.user_id=user_role.user_id ORDER BY cards.balance  LIMIT ?, ?";
+                "FROM customer,cards,user_role WHERE customer.user_id =cards.user_id AND customer.user_id=user_role.user_id AND cards.Status != 'Prepare' ORDER BY cards.balance  LIMIT ?, ?";
         public static final String PAGINATION_ALL_CUSTOMERS_WHERE_STATUS_PREPARE= "SELECT customer.user_id,customer.first_name,customer.second_name,customer.login,customer.phone,cards.card_number,cards.balance,cards.Status,user_role.user_role\n" +
                 "FROM customer,cards,user_role WHERE customer.user_id =cards.user_id AND customer.user_id=user_role.user_id AND cards.Status = 'Prepare'";
         public static final String IS_EXIST_BY_ID = "SELECT * FROM customer WHERE user_id=?";

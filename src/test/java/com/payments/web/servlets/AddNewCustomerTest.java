@@ -111,6 +111,7 @@ class AddNewCustomerTest {
         when(request.getParameter("password")).thenReturn("qwe123!");
         when(request.getParameter("passwordRepeat")).thenReturn("qwe123!");
 
+
         RequestDispatcher requestDispatcher = mock(RequestDispatcher.class);
         when(request.getRequestDispatcher("logIn.jsp")).thenReturn(requestDispatcher);
 
